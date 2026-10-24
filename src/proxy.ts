@@ -1,28 +1,46 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
- 
-const protectedRoutes = ['/home', '/:path/dashboard'];
-const authRoutes = ['/login', '/signup', '/reset-password', '/forgot-password'];
 
-export function proxy(req: NextRequest) {
+import { NextRequest, NextResponse } from "next/server";
 
-  const { pathname } = req.nextUrl;
-  const isAuthenticated = req.cookies.has("accessToken");
-  console.log("isAuthenticatd", isAuthenticated);
+const protectedRoutes = ["/home", "/dashboard"];
+const authRoutes = ["/login", "/signup"];
 
+function matchesRoute(pathname: string, route: string) {
+  return pathname === route || pathname.startsWith(`${route}/`);
+}
 
-  if (!isAuthenticated && protectedRoutes.some(route => pathname.startsWith(route))) {
-    const loginUrl = new URL('/login', req.url);
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    matchesRoute(pathname, route),
+  );
+
+  if (!isProtectedRoute) {
+    return NextResponse.next();
+  }
+
+  const hasAccessToken = request.cookies.has("accessToken");
+
+  if (!hasAccessToken) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("next", pathname);
+
     return NextResponse.redirect(loginUrl);
   }
 
-  if (isAuthenticated && authRoutes.some(route => pathname.startsWith(route))) {
-    const dashboardUrl = new URL('/home', req.url);
-    return NextResponse.redirect(dashboardUrl);
-  }
+  return NextResponse.next();
 }
 
  
 export const config = {
-  matcher: ["/home", "/login", "/signup", "/reset-password"],
+  matcher: [
+    /*
+     * Match all request paths except for:
+     * - api routes
+     * - _next/static, _next/image
+     * - all static media, fonts, and assets (.png, .jpg, .svg, .ttf, etc.)
+     * - metadata files (favicon, sitemap, robots, webmanifest)
+     */
+    "/((?!api|_next/static|_next/image|.*\\.(?:png|avif|jpg|jpeg|gif|webp|svg|ico|ttf|woff|woff2|mp3|wav|webmanifest)$|favicon\\.ico|sitemap\\.xml|robots\\.txt).*)",
+  ],
 }
