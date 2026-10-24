@@ -9,7 +9,7 @@ export const setAccessToken = (token: string | null) => {
 };
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1/",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1/",
   withCredentials: true,
 });
 
@@ -29,39 +29,62 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const response = await axios.post(
-          `${api.defaults.baseURL}auth/refresh-token`, 
-          {}, 
-          { withCredentials: true }
-        );
-
-        const newAccessToken = response.data.accessToken;
-        setAccessToken(newAccessToken);
-
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        
-        return api(originalRequest);
-      }
-      catch (refreshError) {
-        setAccessToken(null);
-        localStorage.removeItem("businessId");
-        
-        if (typeof window !== "undefined") {
-          window.location.href = "/login";
-        }
-        return Promise.reject(refreshError);
-      }
+    if (!originalRequest || error.response?.status !== 401) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
-}
+    const url = originalRequest.url ?? "";
+
+    const excludedEndpoints = [
+      "auth/login",
+      "auth/register",
+      "auth/refresh-token",
+      "auth/forgot-password",
+      "auth/reset-password",
+    ];
+
+    if (excludedEndpoints.some((endpoint) => url.includes(endpoint))) {
+      return Promise.reject(error);
+    }
+
+    if (originalRequest._retry) {
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true;
+
+    try {
+      const response = await axios.post(
+        `${api.defaults.baseURL}auth/refresh-token`,
+        {},
+        { withCredentials: true },
+      );
+
+      const newAccessToken = response.data.accessToken;
+      setAccessToken(newAccessToken);
+
+      originalRequest.headers = originalRequest.headers ?? {};
+      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+      return api(originalRequest);
+    } catch (refreshError) {
+      setAccessToken(null);
+
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("businessId");
+
+        if (window.location.pathname !== "/login") {
+          window.location.replace("/login");
+        }
+      }
+
+      return Promise.reject(refreshError);
+    }
+  },
 );
