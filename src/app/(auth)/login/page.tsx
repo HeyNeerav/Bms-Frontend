@@ -45,14 +45,11 @@ export default function Login() {
       const res = (
         await api.post<ApiResponse>("/auth/login", data)
       ).data
-
-      console.log(res)
       router.push("/home");
 
     } catch (err: unknown) {
-      console.log("err /login", err)
       if (axios.isAxiosError<ApiResponse>(err)) {
-        console.log(err.response?.data.message);
+        console.log("Error Message", err.response?.data.message);
       }
     }
     finally {
@@ -93,7 +90,6 @@ export default function Login() {
                           id="identifier"
                           type="text"
                           placeholder="m@example.com or john_doe"
-                          required
                         />
                         {fieldState.invalid && (
                           <FieldError errors={[fieldState.error]} />
@@ -124,7 +120,6 @@ export default function Login() {
                             {...field}
                             id="password"
                             type={showPassword ? "text" : "password"}
-                            required
                           />
                           <button
                             type="button"
@@ -142,7 +137,7 @@ export default function Login() {
                     )}
                   />
                   <Field>
-                    <Button form="login-form" type="submit" disabled={loading}>
+                    <Button type="submit" disabled={loading}>
                       {loading ? (
                         <>
                           Logging in
