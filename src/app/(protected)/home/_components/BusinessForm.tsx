@@ -30,8 +30,12 @@ import { Plus } from "lucide-react";
 const createBusinessSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
-  website: z.url("Website must be a valid URL").optional(),
-  email: z.email("Email must be a valid email address").optional(),
+  website: z.string("Website must be a valid URL").optional(),
+  email: z.union([
+      z.email("Email must be a valid email address"),
+      z.literal(""),
+    ])
+    .transform((value) => value === "" ? undefined : value),
   phone: z.string().optional(),
   address: z.string().optional(),
 })
@@ -40,23 +44,41 @@ export function CreateBusinessForm(
   { setRefreshKey }: { setRefreshKey: React.Dispatch<React.SetStateAction<number>> }
 ) {
   const [open, setOpen] = useState(false);
-  const form = useForm<z.infer<typeof createBusinessSchema>>({
+  const form = useForm<
+    z.input<typeof createBusinessSchema>,
+    unknown,
+    z.output<typeof createBusinessSchema>
+    >({
     resolver: zodResolver(createBusinessSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      website: "",
+      email: "",
+      phone: "",
+      address: "",
+    },
   })
   
   const onSubmit = async (data: z.infer<typeof createBusinessSchema>) => {
     try {
+        const cleanedData = Object.fromEntries(
+          Object.entries(data).map(([key, value]) => [
+            key, 
+            value === "" ? undefined : value
+          ])
+        );
       const res = (
-        await api.post<ApiResponse>("/businesses", data)
+        await api.post<ApiResponse>("/businesses", cleanedData)
       ).data
 
       console.log("Response", res)
       setRefreshKey((prev) => prev + 1);
 
     } catch (err: unknown) {
-
+      console.log("/businesses error", err)
       if (axios.isAxiosError<ApiResponse>(err)) {
-        console.log("Error /auth/reset-password:", err.response?.data.message);
+        console.log("Error /businesses:", err.response?.data.message);
       }
     } finally {
       setOpen(false);
