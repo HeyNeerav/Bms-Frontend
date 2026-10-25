@@ -5,10 +5,12 @@ export async function apiClient<T>(endpoint: string, options?: RequestInit): Pro
     headers: { 'Content-Type': 'application/json' },
     ...options
   });
-
+  
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || `API error: ${res.status} ${res.statusText}`);
   }
+
 
   return res.json() as Promise<T>;
 }
