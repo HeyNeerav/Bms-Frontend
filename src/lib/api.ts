@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-const BASE_URL = process.env.EXTERNAL_BACKEND_URL || "";
+const BASE_URL = process.env.EXTERNAL_BACKEND_URL || "http://localhost:8000/api/v1";
 
 export class ApiError extends Error {
   constructor(
