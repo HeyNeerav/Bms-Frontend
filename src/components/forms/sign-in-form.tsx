@@ -52,7 +52,7 @@ export function SignInForm({
     },
     onSubmit: async ({ value }) => {
       try {
-        await apiClient.post("/auth/login", {
+        await apiClient.post("/auth/sign-in", {
           identifier: value.identifier,
           password: value.password,
         });
