@@ -15,13 +15,14 @@ export class ApiError extends Error {
 interface FetchOptions extends RequestInit {
   token?: string;
   req?: Request;
+  onResponse?: (response: Response) => void;
 }
 
 export async function fetchWrapper<T>(
   endpoint: string,
   options: FetchOptions = {},
 ): Promise<T> {
-  const { token, headers = {}, req, ...customConfig } = options;
+  const { token, headers = {}, req, onResponse, ...customConfig } = options;
 
   const defaultHeaders: Record<string, string> = {
     "Content-Type": "application/json",
@@ -49,9 +50,12 @@ export async function fetchWrapper<T>(
       ...defaultHeaders,
       ...headers,
     },
+    credentials: "include",
   };
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
+
+  onResponse?.(response);
 
   if (!response.ok) {
     const errorBody = await response.text();
