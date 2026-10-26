@@ -17,11 +17,10 @@
 
 import { fakeProducts } from '@/constants/mock-api';
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { api } from '@/lib/api';
+import { cookies, headers as getHeaders } from 'next/headers';
 
 export async function GET(request: NextRequest) {
-  const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { searchParams } = request.nextUrl;
 
@@ -31,20 +30,31 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get('search') ?? undefined;
   const sort = searchParams.get('sort') ?? undefined;
 
-  const data = await fakeProducts.getProducts({
-    page,
-    limit,
-    categories,
-    search,
-    sort
-  });
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('accessToken')?.value;
+  const businesId = cookieStore.get('businessId')?.value;
+  const headers = await getHeaders();
+
+  const data = await api.get(`/products?${searchParams.toString()}`, {
+    token: accessToken,
+    headers: {
+      "x-business-id": `${businesId}`, 
+      Authorization: `Bearer ${accessToken}`,
+      Cookie: `acessToken=${accessToken}`,
+    },
+  })
+  // const data = await fakeProducts.getProducts({
+  //   page,
+  //   limit,
+  //   categories,
+  //   search,
+  //   sort
+  // });
 
   return NextResponse.json(data);
 }
 
 export async function POST(request: NextRequest) {
-  const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await request.json();
   const data = await fakeProducts.createProduct(body);

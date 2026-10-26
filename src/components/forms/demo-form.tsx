@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useStore } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-form';
 import * as z from 'zod';
 import { useAppForm } from '@/lib/form';
 import { Button } from '@/components/ui/button';
@@ -145,8 +145,8 @@ export default function DemoForm() {
     }
   });
 
-  const formValues = useStore(form.store, (s) => s.values);
-  const isSubmitting = useStore(form.store, (s) => s.isSubmitting);
+  const formValues = useSelector(form.store, (s) => s.values);
+  const isSubmitting = useSelector(form.store, (s) => s.isSubmitting);
 
   return (
     <div className='grid grid-cols-1 gap-6 xl:grid-cols-[1fr_320px]'>
