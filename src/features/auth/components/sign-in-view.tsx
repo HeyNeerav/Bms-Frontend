@@ -1,8 +1,12 @@
+"use client";
+
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { InteractiveGridPattern } from './interactive-grid';
+import Image from 'next/image';
+import { SignInForm } from '@/components/forms/sign-in-form';
 
 export const metadata: Metadata = {
   title: 'Authentication',
@@ -24,7 +28,14 @@ export default function SignInViewPage() {
       <div className='relative hidden h-full flex-col p-10 lg:flex dark:border-r'>
         <div className='absolute inset-0 bg-sidebar' />
         <div className='text-sidebar-foreground relative z-20 flex items-center text-lg font-medium'>
-          <svg
+          <Image
+            src='/logo.png'
+            width={32}
+            height={32}
+            alt='Logo'
+            className='mr-2'
+          />
+          {/* <svg
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 24 24'
             fill='none'
@@ -36,7 +47,7 @@ export default function SignInViewPage() {
           >
             <path d='M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3' />
           </svg>
-          Logo
+          Logo */}
         </div>
         <InteractiveGridPattern
           className={cn(
@@ -47,16 +58,16 @@ export default function SignInViewPage() {
         <div className='text-sidebar-foreground relative z-20 mt-auto'>
           <blockquote className='space-y-2'>
             <p className='text-lg'>
-              &ldquo;This starter template has saved me countless hours of work and helped me
-              deliver projects to my clients faster than ever before.&rdquo;
+              &ldquo;I wish I could stay in this moment forever... but then it wouldn't be a moment.&rdquo;
             </p>
-            <footer className='text-sidebar-foreground/70 text-sm'>Random Dude</footer>
+            <footer className='text-sidebar-foreground/70 text-sm'>— Max Caulfield</footer>
           </blockquote>
         </div>
       </div>
       <div className='flex h-full items-center justify-center p-4 lg:p-8'>
         <div className='flex w-full max-w-md flex-col items-center justify-center space-y-6'>
           {/* Form will go here */}
+          <SignInForm />
         </div>
       </div>
     </div>
