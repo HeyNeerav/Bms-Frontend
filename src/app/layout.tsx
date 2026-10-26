@@ -20,32 +20,32 @@ export const metadata: Metadata = {
     ? { metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL) }
     : {}),
   title: {
-    default: 'Shadcn Dashboard - Next.js Admin Dashboard Template',
-    template: '%s | Shadcn Dashboard'
+    default: 'BMS Dashboard',
+    template: '%s'
   },
   description:
-    'Free, open source admin dashboard starter built with Next.js 16, shadcn/ui, Tailwind CSS, and TypeScript.',
+    'Business Management System Dashboard built using Next.js, TypeScript, Tailwind CSS, and Radix UI.',
   openGraph: {
-    title: 'Shadcn Dashboard - Next.js Admin Dashboard Template',
+    title: 'BMS Dashboard',
     description:
-      'Free, open source admin dashboard starter built with Next.js 16, shadcn/ui, Tailwind CSS, and TypeScript.',
-    siteName: 'Shadcn Dashboard',
+      'Business Management System Dashboard built using Next.js, TypeScript, Tailwind CSS, and Radix UI.',
+    siteName: 'BMS Dashboard',
     type: 'website',
     images: [
       {
-        url: '/shadcn-dashboard.png',
+        url: '/bms-dashboard.png',
         width: 3200,
         height: 1600,
-        alt: 'Shadcn Dashboard overview page'
+        alt: 'BMS Dashboard overview page'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Shadcn Dashboard - Next.js Admin Dashboard Template',
+    title: 'BMS Dashboard',
     description:
-      'Free, open source admin dashboard starter built with Next.js 16, shadcn/ui, Tailwind CSS, and TypeScript.',
-    images: ['/shadcn-dashboard.png']
+      'Business Management System Dashboard built using Next.js, TypeScript, Tailwind CSS, and Radix UI.',
+    images: ['/bms-dashboard.png']
   }
 };
 
