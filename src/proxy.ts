@@ -1,13 +1,46 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { NextRequest, NextResponse } from "next/server";
 
-// Each /dashboard page and API route checks auth itself (`auth.protect()` / `auth()`).
-// clerkMiddleware() only attaches the auth context to every request.
-export default clerkMiddleware();
+const privateAuthRoutes = [
+  "/auth/sign-up",
+  "/auth/sign-in",
+  "/auth/forgot-password",
+];
+
+function matchesRoute(pathname: string, route: string) {
+  return pathname === route || pathname.startsWith(`${route}/`);
+}
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  const isPrivateAuthRoute = privateAuthRoutes.some((route) =>
+    matchesRoute(pathname, route),
+  );
+  const hasAccessToken = request.cookies.has("accessToken");
+
+  if (isPrivateAuthRoute && hasAccessToken) {
+    const homeUrl = new URL("/home", request.url);
+    return NextResponse.redirect(homeUrl);
+  }
+
+  if (!isPrivateAuthRoute && !hasAccessToken) {
+    const loginUrl = new URL("/auth/sign-in", request.url);
+
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
+}
+
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)'
-  ]
+    /*
+     * Match all request paths except for:
+     * - API routes
+     * - _next/static and _next/image
+     * - Static media, fonts, and assets
+     * - Metadata files
+     */
+    "/((?!api|trpc|_next/static|_next/image|.*\\.(?:html?|css|js(?!on)|jpe?g|avif|png|gif|webp|svg|ico|ttf|woff2?|mp3|wav|csv|docx?|xlsx?|zip|webmanifest)$|favicon\\.ico|sitemap\\.xml|robots\\.txt).*)",
+  ],
 };
