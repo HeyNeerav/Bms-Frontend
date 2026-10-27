@@ -19,7 +19,7 @@ export function proxy(request: NextRequest) {
   const hasAccessToken = request.cookies.has("accessToken");
 
   if (isPrivateAuthRoute && hasAccessToken) {
-    const homeUrl = new URL("/home", request.url);
+    const homeUrl = new URL("/businesses", request.url);
     return NextResponse.redirect(homeUrl);
   }
 
