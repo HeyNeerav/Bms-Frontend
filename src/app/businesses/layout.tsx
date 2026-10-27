@@ -10,8 +10,8 @@ export default function BusinessesLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="h-16 border-b border-border bg-background/90">
+    <main className="flex flex-col min-h-screen bg-background text-foreground">
+      <header className="h-16 shrink-0 border-b border-border bg-background/90">
         <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between px-6 lg:px-20">
           <div className="flex items-center gap-3">
             <div className="grid size-8 place-items-center text-primary">

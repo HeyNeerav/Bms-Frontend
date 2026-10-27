@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
@@ -7,14 +8,13 @@ import {
   Mail,
   Plus,
   Search,
-  UserRoundPlus,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+
 import { apiClient } from "@/lib/api-client";
-import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
 
 type Business = {
   _id: string;
@@ -24,8 +24,13 @@ type Business = {
 };
 
 function BusinessCard({ business }: { business: Business }) {
+  const router = useRouter();
+
   return (
-    <Card className="rounded-xl border-border/80 bg-card/85 shadow-none transition hover:-translate-y-0.5 hover:shadow-md">
+    <Card
+      onClick={() => router.push(`/${business.slug}/overview`)}
+      className="rounded-xl border-border/80 bg-card/85 shadow-none transition hover:-translate-y-0.5 hover:shadow-md"
+    >
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
           <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
@@ -65,8 +70,13 @@ export default function Page() {
 
   useEffect(() => {
     const fetchBusinesses = async () => {
-      const res: { data: Business[] } = await apiClient.get("/businesses");
-      setBusinesses(res.data);
+      try {
+        const res: { data: Business[] } = await apiClient.get("/businesses");
+        setBusinesses(res.data);
+        
+      } catch (error) {
+        setBusinesses([]); 
+      }
     };
 
     fetchBusinesses();
@@ -83,7 +93,7 @@ export default function Page() {
   );
 
   return (
-    <section className="mx-auto max-w-[1440px] px-6 pb-10 pt-14 lg:px-20 lg:pt-16">
+    <section className="mx-auto w-full max-w-[1440px] px-6 pb-10 pt-14 lg:px-20 lg:pt-16">
       <div className="relative overflow-hidden pb-9">
         <div className="relative z-10 max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground">
@@ -162,16 +172,9 @@ export default function Page() {
           <div className="flex-1 text-center sm:text-left">
             <h2 className="font-semibold">Have an invitation?</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Join an existing business using an invitation link.
+              Business will show up here. Check your email!
             </p>
           </div>
-          <Button
-            variant="outline"
-            className="h-12 rounded-xl border-border bg-background px-6 font-semibold"
-          >
-            <UserRoundPlus data-icon="inline-start" />
-            Join with invitation
-          </Button>
         </div>
       </div>
     </section>
