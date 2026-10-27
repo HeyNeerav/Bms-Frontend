@@ -189,7 +189,7 @@ export default function CreateBusinessForm() {
   );
 
   return (
-    <section className="mx-auto h-full max-w-[1440px] px-6 py-8 lg:px-20">
+    <section className="mx-auto w-full h-full max-w-[1440px] px-6 py-8 lg:px-20">
       <div className="mb-7 flex items-center justify-between">
         <div>
           <p className="text-sm text-muted-foreground">
