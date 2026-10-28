@@ -8,8 +8,11 @@ import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 import { getSortingStateParser } from '@/lib/data-table-parsers';
 import { usersQueryOptions } from '../../api/queries';
 import { columns } from './columns';
+import { useBusiness } from '@/components/business-provider';
 
 export function UsersTable() {
+  const business = useBusiness();
+
   const [params] = useQueryStates({
     page: parseAsInteger.withDefault(1),
     perPage: parseAsInteger.withDefault(10),
@@ -25,7 +28,7 @@ export function UsersTable() {
     ...(params.sort.length > 0 && { sort: JSON.stringify(params.sort) })
   };
 
-  const { data } = useSuspenseQuery(usersQueryOptions(filters));
+  const { data } = useSuspenseQuery(usersQueryOptions(business._id, filters));
 
   const pageCount = Math.ceil(data.total_users / params.perPage);
 

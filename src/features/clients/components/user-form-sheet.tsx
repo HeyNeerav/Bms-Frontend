@@ -20,6 +20,7 @@ import type { User } from "../api/types";
 import { toast } from "sonner";
 import { userSchema, type UserFormValues } from "../schemas/user";
 import { ROLE_OPTIONS } from "./users-table/options";
+import { useBusiness } from "@/components/business-provider";
 
 const STATUS_OPTIONS = [
   { value: "Active", label: "Active" },
@@ -39,6 +40,8 @@ export function UserFormSheet({
   onOpenChange,
 }: UserFormSheetProps) {
   const isEdit = !!user;
+
+  const business = useBusiness();
 
   const createMutation = useMutation({
     ...createUserMutation,
@@ -77,7 +80,7 @@ export function UserFormSheet({
       if (isEdit) {
         await updateMutation.mutateAsync({ id: user.id, values: value });
       } else {
-        await createMutation.mutateAsync(value);
+        await createMutation.mutateAsync({id: business._id, data: value});
       }
     },
   });
@@ -163,6 +166,16 @@ export function UserFormSheet({
                 name="gstNumber"
                 children={(field) => (
                   <field.TextField label="GST Number" placeholder="123456789" />
+                )}
+              />
+
+              <form.AppField
+                name="tags"
+                children={(field) => (
+                  <field.TagsField
+                    label="Tags"
+                    placeholder="Select tags"
+                  />
                 )}
               />
 

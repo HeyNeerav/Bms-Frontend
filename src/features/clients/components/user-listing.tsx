@@ -4,7 +4,8 @@ import { searchParamsCache } from '@/lib/searchparams';
 import { usersQueryOptions } from '../api/queries';
 import { UsersTable } from './users-table';
 
-export default function UserListingPage() {
+export default function UserListingPage({ businessId }: { businessId: string }) {
+
   const page = searchParamsCache.get('page');
   const search = searchParamsCache.get('name');
   const pageLimit = searchParamsCache.get('perPage');
@@ -21,7 +22,7 @@ export default function UserListingPage() {
 
   const queryClient = getQueryClient();
 
-  void queryClient.query(usersQueryOptions(filters));
+  void queryClient.query(usersQueryOptions(businessId, filters));
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
