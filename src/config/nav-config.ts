@@ -39,7 +39,7 @@ export const navGroups: NavGroup[] = [
     items: [
       {
         title: 'Dashboard',
-        url: '/dashboard/overview',
+        url: '/overview',
         icon: 'dashboard',
         isActive: false,
         shortcut: ['d', 'd'],
@@ -47,7 +47,7 @@ export const navGroups: NavGroup[] = [
       },
       {
         title: 'Product',
-        url: '/dashboard/product',
+        url: '/product',
         icon: 'product',
         shortcut: ['p', 'p'],
         isActive: false,
@@ -55,7 +55,7 @@ export const navGroups: NavGroup[] = [
       },
       {
         title: 'Clients',
-        url: '/dashboard/clients',
+        url: '/clients',
         icon: 'teams',
         shortcut: ['c', 'c'],
         isActive: false,
@@ -74,37 +74,37 @@ export const navGroups: NavGroup[] = [
         items: [
           {
             title: 'Basic Form',
-            url: '/dashboard/forms/basic',
+            url: '/forms/basic',
             icon: 'forms',
             shortcut: ['f', 'f']
           },
           {
             title: 'Multi-Step Form',
-            url: '/dashboard/forms/multi-step',
+            url: '/forms/multi-step',
             icon: 'forms'
           },
           {
             title: 'Sheet & Dialog',
-            url: '/dashboard/forms/sheet-form',
+            url: '/forms/sheet-form',
             icon: 'forms'
           },
           {
             title: 'Advanced Patterns',
-            url: '/dashboard/forms/advanced',
+            url: '/forms/advanced',
             icon: 'forms'
           }
         ]
       },
       {
         title: 'React Query',
-        url: '/dashboard/react-query',
+        url: '/react-query',
         icon: 'code',
         isActive: false,
         items: []
       },
       {
         title: 'Icons',
-        url: '/dashboard/elements/icons',
+        url: '/elements/icons',
         icon: 'palette',
         isActive: false,
         items: []
@@ -122,7 +122,7 @@ export const navGroups: NavGroup[] = [
         items: [
           {
             title: 'Notifications',
-            url: '/dashboard/notifications',
+            url: '/notifications',
             icon: 'notification',
             shortcut: ['n', 'n']
           },

@@ -30,7 +30,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Icons } from '@/components/icons';
 
-export default function AppSidebar() {
+export default function AppSidebar({ slug }: { slug: string }) {
+
   const pathname = usePathname();
   const router = useRouter();
   const filteredGroups = useFilteredNavGroups(navGroups);
@@ -55,7 +56,7 @@ export default function AppSidebar() {
                       render={
                         <SidebarMenuButton
                           tooltip={item.title}
-                          isActive={pathname === item.url}
+                          isActive={pathname === `/${slug}${item.url}`}
                           className='group/collapsible'
                         />
                       }
@@ -69,8 +70,8 @@ export default function AppSidebar() {
                         {item.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton
-                              render={<Link href={subItem.url} aria-label={subItem.title} />}
-                              isActive={pathname === subItem.url}
+                              render={<Link href={`/${slug}${subItem.url}`} aria-label={subItem.title} />}
+                              isActive={pathname === `/${slug}${subItem.url}`}
                             >
                               <span>{subItem.title}</span>
                             </SidebarMenuSubButton>
@@ -82,9 +83,9 @@ export default function AppSidebar() {
                 ) : (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      render={<Link href={item.url} aria-label={item.title} />}
+                      render={<Link href={`/${slug}${item.url}`} aria-label={item.title} />}
                       tooltip={item.title}
-                      isActive={pathname === item.url}
+                      isActive={pathname === `/${slug}${item.url}`}
                     >
                       <Icon />
                       <span>{item.title}</span>

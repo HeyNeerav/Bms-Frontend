@@ -8,7 +8,7 @@ import RenderResults from './render-result';
 import useThemeSwitching from './use-theme-switching';
 import { useFilteredNavGroups } from '@/hooks/use-nav';
 
-export default function KBar({ children }: { children: React.ReactNode }) {
+export default function KBar({ slug, children }: { slug: string, children: React.ReactNode }) {
   const router = useRouter();
   const filteredGroups = useFilteredNavGroups(navGroups);
 
@@ -16,7 +16,7 @@ export default function KBar({ children }: { children: React.ReactNode }) {
   const actions = useMemo(() => {
     // Define navigateTo inside the useMemo callback to avoid dependency array issues
     const navigateTo = (url: string) => {
-      router.push(url);
+      router.push(`/${slug}${url}`);
     };
 
     const allItems = filteredGroups.flatMap((group) => group.items);
