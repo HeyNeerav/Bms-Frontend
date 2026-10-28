@@ -34,20 +34,31 @@ import type { UserFilters, UsersResponse, UserMutationPayload } from './types';
 import { api } from '@/lib/api';
 import { cookies } from 'next/headers';
 
-export async function getUsers(filters: UserFilters): Promise<UsersResponse> {
+export async function getUsers(businessId: string, filters: UserFilters): Promise<UsersResponse> {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
   const queryString = new URLSearchParams(filters as Record<string, string>).toString();
+  const res = await api.get(`/clients?${queryString}`, { token, businessId });
 
-  return api.get(`/clients?${queryString}`, {token});
+  const cleaned = {
+    success: res.statusCode < 400,
+    time: new Date().toISOString(),
+    message: "Users fetched successfully",
+    total_users: res.data.totalDocs || 0,
+    offset: (res.data.page - 1) * res.data.limit,
+    limit: res.data.limit,
+    users:res.data.docs
+  }
+
+  return cleaned;
 }
 
-export async function createUser(data: UserMutationPayload) {
+export async function createUser(businessId: string, data: UserMutationPayload) {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
-  return await api.post('/clients', data, {token});
+  return await api.post('/clients', data, {token, businessId});
 }
 
 export async function updateUser(id: string, data: UserMutationPayload) {
