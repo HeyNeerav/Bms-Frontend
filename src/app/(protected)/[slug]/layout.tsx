@@ -32,7 +32,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   try {
-    const data = await api.get("/auth/me", {token: accessToken});
+    await api.get("/auth/me", {token: accessToken});
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
       redirect("/api/auth/clear-session");
