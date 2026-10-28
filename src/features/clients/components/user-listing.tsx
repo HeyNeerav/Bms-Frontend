@@ -21,7 +21,7 @@ export default function UserListingPage() {
 
   const queryClient = getQueryClient();
 
-  void queryClient.prefetchQuery(usersQueryOptions(filters));
+  void queryClient.query(usersQueryOptions(filters));
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

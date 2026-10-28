@@ -1,3 +1,5 @@
+"use server";
+
 // ============================================================
 // User Service — Data Access Layer
 // ============================================================
@@ -29,19 +31,35 @@
 
 import { fakeUsers } from '@/constants/mock-api-users';
 import type { UserFilters, UsersResponse, UserMutationPayload } from './types';
+import { api } from '@/lib/api';
+import { cookies } from 'next/headers';
 
 export async function getUsers(filters: UserFilters): Promise<UsersResponse> {
-  return fakeUsers.getUsers(filters);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  const queryString = new URLSearchParams(filters as Record<string, string>).toString();
+
+  return api.get(`/clients?${queryString}`, {token});
 }
 
 export async function createUser(data: UserMutationPayload) {
-  return fakeUsers.createUser(data);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  return await api.post('/clients', data, {token});
 }
 
-export async function updateUser(id: number, data: UserMutationPayload) {
-  return fakeUsers.updateUser(id, data);
+export async function updateUser(id: string, data: UserMutationPayload) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  return await api.patch(`/clients/${id}`, data, {token});
 }
 
 export async function deleteUser(id: number) {
-  return fakeUsers.deleteUser(id);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  return await api.delete(`/clients/${id}`, {token});
 }

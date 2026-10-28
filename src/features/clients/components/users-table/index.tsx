@@ -14,7 +14,6 @@ export function UsersTable() {
     page: parseAsInteger.withDefault(1),
     perPage: parseAsInteger.withDefault(10),
     name: parseAsString,
-    role: parseAsString,
     // Same parser as the server searchParamsCache, so the prefetched query key matches
     sort: getSortingStateParser().withDefault([])
   });
@@ -23,7 +22,6 @@ export function UsersTable() {
     page: params.page,
     limit: params.perPage,
     ...(params.name && { search: params.name }),
-    ...(params.role && { roles: params.role }),
     ...(params.sort.length > 0 && { sort: JSON.stringify(params.sort) })
   };
 
