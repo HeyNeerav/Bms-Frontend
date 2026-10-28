@@ -5,30 +5,12 @@ import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "@/components/themes/theme-selector";
 import { ThemeModeToggle } from "@/components/themes/theme-mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { api, ApiError } from "@/lib/api";
 
 export default async function BusinessesLayout({
   children,
 }: {
   children: React.ReactNode;
-  }) {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
-
-  if (!accessToken) {
-    redirect("/login");
-  }
-
-  try {
-    await api.get("/auth/me", {token: accessToken});
-  } catch (error) {
-    if (error instanceof ApiError && error.status === 401) {
-      redirect("/api/auth/clear-session");
-    }
-  }
-  
+}) {
   return (
     <main className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="h-16 shrink-0 border-b border-border bg-background/90">

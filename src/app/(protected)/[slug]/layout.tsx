@@ -1,8 +1,5 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-
-import { api, ApiError } from '@/lib/api';
 import KBar from '@/components/kbar';
 
 import Header from '@/components/layout/header';
@@ -22,22 +19,8 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  // Persisting the sidebar state in the cookie.
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
-  const accessToken = cookieStore.get("accessToken")?.value;
-
-  if (!accessToken) {
-    redirect("/login");
-  }
-
-  try {
-    await api.get("/auth/me", {token: accessToken});
-  } catch (error) {
-    if (error instanceof ApiError && error.status === 401) {
-      redirect("/api/auth/clear-session");
-    }
-  }
 
   return (
     <KBar>
