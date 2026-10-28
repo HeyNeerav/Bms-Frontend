@@ -33,4 +33,38 @@ export const columns: ColumnDef<DataTableFeatures, User>[] = [
     accessorKey: 'phone',
     header: 'PHONE'
   },
+  {
+    accessorKey: 'address',
+    header: 'ADDRESS',
+  },
+  {
+    accessorKey: 'companyName',
+    header: 'COMPANY NAME',
+  }, 
+  {
+    accessorKey: 'gstNumber',
+    header: 'GST NUMBER',
+  },
+  {
+    accessorKey: 'tags',
+    header: 'TAGS',
+    cell: ({ row }) => (
+      <div className='flex flex-wrap gap-1'>
+        {row.original.tags?.map((tag) => (
+          <Badge key={tag} variant='secondary' className='text-xs'>
+            {tag}
+          </Badge>
+        ))}
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'notes',
+    header: 'NOTES',
+    cell: ({ row }) => (
+      <div className='text-wrap'>
+        {row.original.notes}
+      </div>
+    ),
+  }
 ];
