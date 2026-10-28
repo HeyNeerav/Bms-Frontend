@@ -14,6 +14,7 @@ export class ApiError extends Error {
 
 interface FetchOptions extends RequestInit {
   token?: string;
+  businessId?: string;
   req?: Request;
   onResponse?: (response: Response) => void;
 }
@@ -22,7 +23,7 @@ export async function fetchWrapper<T>(
   endpoint: string,
   options: FetchOptions = {},
 ): Promise<T> {
-  const { token, headers = {}, req, onResponse, ...customConfig } = options;
+  const { token, businessId, headers = {}, req, onResponse, ...customConfig } = options;
 
   const defaultHeaders: Record<string, string> = {
     "Content-Type": "application/json",
@@ -36,9 +37,6 @@ export async function fetchWrapper<T>(
     const cookieHeader = req.headers.get("cookie");
     if (cookieHeader) defaultHeaders["cookie"] = cookieHeader;
   }
-
-  const cookieStore = await cookies();
-  const businessId = cookieStore.get("business_id")?.value;
 
   if (businessId) {
     defaultHeaders["x-business-id"] = businessId;
