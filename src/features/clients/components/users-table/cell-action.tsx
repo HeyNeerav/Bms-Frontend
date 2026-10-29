@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { UserFormSheet } from '../user-form-sheet';
+import { useBusiness } from '@/components/business-provider';
 
 interface CellActionProps {
   data: User;
@@ -24,6 +25,8 @@ interface CellActionProps {
 export function CellAction({ data }: CellActionProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+
+  const business = useBusiness();
 
   const deleteMutation = useMutation({
     ...deleteUserMutation,
@@ -41,7 +44,7 @@ export function CellAction({ data }: CellActionProps) {
       <AlertModal
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
-        onConfirm={() => deleteMutation.mutate(data.id)}
+        onConfirm={() => deleteMutation.mutate({ businessId: business._id, id: data._id })}
         loading={deleteMutation.isPending}
       />
       <UserFormSheet user={data} open={editOpen} onOpenChange={setEditOpen} />

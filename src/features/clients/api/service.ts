@@ -50,16 +50,16 @@ export async function createUser(
   return await api.post("/clients", data, { token, businessId });
 }
 
-export async function updateUser(id: string, data: UserMutationPayload) {
+export async function updateUser(businessId: string, id: string, data: UserMutationPayload) {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
-  return await api.patch(`/clients/${id}`, data, { token });
+  return await api.patch(`/clients/${id}`, data, { token, businessId });
 }
 
-export async function deleteUser(id: number) {
+export async function deleteUser(businessId: string, id: string) {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
-  return await api.delete(`/clients/${id}`, { token });
+  return await api.delete(`/clients/${id}`, { token, businessId });
 }

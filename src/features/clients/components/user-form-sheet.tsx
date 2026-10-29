@@ -78,9 +78,16 @@ export function UserFormSheet({
     },
     onSubmit: async ({ value }) => {
       if (isEdit) {
-        await updateMutation.mutateAsync({ id: user.id, values: value });
+        await updateMutation.mutateAsync({
+          businessId: business._id,
+          id: user._id,
+          values: value,
+        });
       } else {
-        await createMutation.mutateAsync({id: business._id, data: value});
+        await createMutation.mutateAsync({
+          businessId: business._id,
+          data: value,
+        });
       }
     },
   });
@@ -172,10 +179,7 @@ export function UserFormSheet({
               <form.AppField
                 name="tags"
                 children={(field) => (
-                  <field.TagsField
-                    label="Tags"
-                    placeholder="Select tags"
-                  />
+                  <field.TagsField label="Tags" placeholder="Select tags" />
                 )}
               />
 
