@@ -1,23 +1,28 @@
-import { queryOptions } from '@tanstack/react-query';
-import { getProducts, getProductById } from './service';
-import type { Product, ProductFilters } from './types';
+import { queryOptions } from "@tanstack/react-query";
+import { getProducts, getProductById } from "./service";
+import type { Product, ProductFilters } from "./types";
 
 export type { Product };
 
 export const productKeys = {
-  all: ['products'] as const,
-  list: (filters: ProductFilters) => [...productKeys.all, 'list', filters] as const,
-  detail: (id: number) => [...productKeys.all, 'detail', id] as const
+  all: ["products"] as const,
+  list: (businessId: string, filters: ProductFilters) =>
+    [...productKeys.all, businessId, "list", filters] as const,
+  detail: (businessId: string, id: string) =>
+    [...productKeys.all, businessId, "detail", id] as const,
 };
 
-export const productsQueryOptions = (filters: ProductFilters) =>
+export const productsQueryOptions = (
+  businessId: string,
+  filters: ProductFilters,
+) =>
   queryOptions({
-    queryKey: productKeys.list(filters),
-    queryFn: () => getProducts(filters)
+    queryKey: productKeys.list(businessId, filters),
+    queryFn: () => getProducts(businessId, filters),
   });
 
-export const productByIdOptions = (id: number) =>
+export const productByIdOptions = (businessId: string, id: string) =>
   queryOptions({
-    queryKey: productKeys.detail(id),
-    queryFn: () => getProductById(id)
+    queryKey: productKeys.detail(businessId, id),
+    queryFn: () => getProductById(businessId, id),
   });

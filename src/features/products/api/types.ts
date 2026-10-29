@@ -1,4 +1,22 @@
-export type { Product } from '@/constants/mock-api';
+export type ProductType = "PRODUCT" | "SERVICE";
+
+export type Product = {
+  _id: string;
+  name: string;
+  description?: string;
+  type: ProductType;
+  price: number;
+  stockQuantity: number;
+  sku?: string;
+  category?: string;
+  image?: {
+    url?: string;
+    publicId?: string;
+  };
+  isArchived: boolean;
+  createdBy: string;
+  metadata?: Record<string, unknown>;
+}
 
 export type ProductFilters = {
   page?: number;
@@ -15,19 +33,23 @@ export type ProductsResponse = {
   total_products: number;
   offset: number;
   limit: number;
-  products: import('@/constants/mock-api').Product[];
+  products: Product[];
 };
 
 export type ProductByIdResponse = {
   success: boolean;
   time: string;
   message: string;
-  product: import('@/constants/mock-api').Product;
+  product: Product;
 };
 
 export type ProductMutationPayload = {
-  name: string;
+  name?: string;
+  price?: number;
+  type?: ProductType;
+  stockQuantity?: number;
+  sku?: string | undefined;
+  imageUrl?: File | null;
   category: string;
-  price: number;
   description: string;
 };
