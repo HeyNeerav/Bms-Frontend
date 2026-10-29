@@ -4,3 +4,8 @@ export const categoryOptions = [
   { value: 'home', label: 'Home & Garden' },
   { value: 'sports', label: 'Sports & Outdoors' }
 ];
+
+export const typeOptions = [
+  { value: "PRODUCT", label: "Product" },
+  { value: "SERVIC", label: "Service" }
+]
