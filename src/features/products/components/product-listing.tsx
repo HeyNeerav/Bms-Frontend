@@ -4,24 +4,21 @@ import { searchParamsCache } from '@/lib/searchparams';
 import { productsQueryOptions } from '../api/queries';
 import { ProductTable } from './product-tables';
 
-export default function ProductListingPage() {
+export default function ProductListingPage({ businessId }: { businessId: string }) {
   const page = searchParamsCache.get('page');
   const search = searchParamsCache.get('name');
   const pageLimit = searchParamsCache.get('perPage');
-  const categories = searchParamsCache.get('category');
   const sort = searchParamsCache.get('sort');
 
   const filters = {
     page,
     limit: pageLimit,
     ...(search && { search }),
-    ...(categories && { categories }),
     ...(sort.length > 0 && { sort: JSON.stringify(sort) })
   };
 
   const queryClient = getQueryClient();
-
-  void queryClient.prefetchQuery(productsQueryOptions(filters));
+  void queryClient.prefetchQuery(productsQueryOptions(businessId, filters));
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

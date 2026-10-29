@@ -5,13 +5,14 @@ import { LoadingButton } from '@/components/ui/loading-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldGroup } from '@/components/ui/field';
 import { useAppForm } from '@/lib/form';
-import { categoryOptions } from '@/features/products/constants/product-options';
+import { typeOptions } from '@/features/products/constants/product-options';
 import { productSchema, type ProductFormValues } from '@/features/products/schemas/product';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { createProductMutation, updateProductMutation } from '../api/mutations';
 import type { Product } from '../api/types';
+import { useBusiness } from '@/components/business-provider';
 
 export default function ProductForm({
   initialData,
@@ -22,35 +23,41 @@ export default function ProductForm({
 }) {
   const router = useRouter();
   const isEdit = !!initialData;
+  const business = useBusiness();
 
   const createMutation = useMutation({
     ...createProductMutation,
     onSuccess: () => {
       toast.success('Product created');
-      router.push('/dashboard/product');
+      router.push(`/${business?.slug}/product`);
     },
     onError: () => {
       toast.error("Couldn't create product. Try again.");
     }
   });
 
+
   const updateMutation = useMutation({
     ...updateProductMutation,
     onSuccess: () => {
       toast.success('Product updated');
-      router.push('/dashboard/product');
+      router.push(`/${business?.slug}/product`);
     },
     onError: () => {
       toast.error("Couldn't update product. Try again.");
     }
   });
 
+
   const form = useAppForm({
     defaultValues: {
-      image: undefined,
+      imageUrl: undefined,
       name: initialData?.name ?? '',
+      price: initialData?.price || 0,
+      type: initialData?.type ?? 'PRODUCT',
+      stockQuantity: initialData?.stockQuantity ?? 0,
+      sku : initialData?.sku ?? '',
       category: initialData?.category ?? '',
-      price: initialData?.price,
       description: initialData?.description ?? ''
     } as ProductFormValues,
     validators: {
@@ -59,15 +66,20 @@ export default function ProductForm({
     onSubmit: ({ value }) => {
       const payload = {
         name: value.name,
-        category: value.category,
-        price: value.price!,
-        description: value.description
+        price: value.price,
+        type: value.type,
+        imageUrl: value.imageUrl?.[0] ?? null,
+        stockQuantity: value.stockQuantity,
+        sku: value.sku,
+        category: value.category ?? "",
+        description: value.description ?? ""
       };
+      const businessId = business?._id;
 
       if (isEdit) {
-        updateMutation.mutate({ id: initialData.id, values: payload });
+        updateMutation.mutate({ businessId, id: initialData._id, values: payload });
       } else {
-        createMutation.mutate(payload);
+        createMutation.mutate({businessId, data: payload});
       }
     }
   });
@@ -89,13 +101,13 @@ export default function ProductForm({
         >
           <FieldGroup>
             <form.AppField
-              name='image'
+              name='imageUrl'
               children={(field) => (
                 <field.FileUploadField
                   label='Product Image'
                   description='Upload a product image'
                   maxSize={5 * 1024 * 1024}
-                  maxFiles={4}
+                  maxFiles={1}
                 />
               )}
             />
@@ -108,17 +120,6 @@ export default function ProductForm({
                 )}
               />
 
-              <form.AppField
-                name='category'
-                children={(field) => (
-                  <field.SelectField
-                    label='Category'
-                    required
-                    options={categoryOptions}
-                    placeholder='Select category'
-                  />
-                )}
-              />
 
               <form.AppField
                 name='price'
@@ -133,6 +134,54 @@ export default function ProductForm({
                   />
                 )}
               />
+
+              <form.AppField
+                name='stockQuantity'
+                children={(field) => (
+                  <field.TextField
+                    label='Stock Quantity'
+                    required
+                    type='number'
+                    min={0}
+                    step={1}
+                    placeholder='Enter stock'
+                  />
+                )}
+              />
+
+              <form.AppField
+                name='sku'
+                children={(field) => (
+                  <field.TextField
+                    label='SKU'
+                    placeholder='Enter SKU'
+                  />
+                )}
+              />
+
+              <form.AppField
+                name='type'
+                children={(field) => (
+                  <field.SelectField
+                    label='Type'
+                    required
+                    options={typeOptions}
+                    placeholder='Select Type'
+                  />
+                )}
+              />
+
+              <form.AppField
+                name='category'
+                children={(field) => (
+                  <field.TextField
+                    label='Category'
+                    required
+                    placeholder='Select category'
+                  />
+                )}
+              />
+
             </div>
 
             <form.AppField

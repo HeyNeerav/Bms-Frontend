@@ -8,18 +8,21 @@ import { productByIdOptions } from '../api/queries';
 
 type TProductViewPageProps = {
   productId: string;
+  businessId: string;
 };
 
-export default function ProductViewPage({ productId }: TProductViewPageProps) {
+export default function ProductViewPage({ productId, businessId }: TProductViewPageProps) {
   if (productId === 'new') {
     return <ProductForm initialData={null} pageTitle='Create New Product' />;
   }
 
-  return <EditProductView productId={Number(productId)} />;
+  return <EditProductView productId={productId} businessId={businessId} />;
 }
 
-function EditProductView({ productId }: { productId: number }) {
-  const { data } = useSuspenseQuery(productByIdOptions(productId));
+function EditProductView({ productId, businessId }: { productId: string; businessId: string }) {
+
+
+  const { data } = useSuspenseQuery(productByIdOptions(businessId, productId));
 
   if (!data?.success || !data?.product) {
     notFound();
