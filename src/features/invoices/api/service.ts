@@ -28,8 +28,6 @@ export async function getInvoices(
     { token, businessId },
   );
 
-  console.log("Res", res);
-
   const cleaned = {
     success: res.statusCode < 400,
     time: new Date().toISOString(),

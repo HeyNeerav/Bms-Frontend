@@ -39,7 +39,6 @@ export async function POST(req: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
-    console.log("Error create business", error);
     if (error instanceof ApiError) {
       if (error.status === 401) {
         return NextResponse.json(
