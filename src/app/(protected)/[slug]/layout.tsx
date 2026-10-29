@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import KBar from "@/components/kbar";
+import { notFound, redirect } from "next/navigation";
 
+import { getBusinessBySlug } from "@/lib/businesses";
+
+import KBar from "@/components/kbar";
 import Header from "@/components/layout/header";
 import AppSidebar from "@/components/layout/app-sidebar";
 import { InfoSidebar } from "@/components/layout/info-sidebar";
@@ -9,9 +12,6 @@ import { InfoSidebar } from "@/components/layout/info-sidebar";
 import { InfobarProvider } from "@/components/ui/infobar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { BusinessProvider } from "@/components/business-provider";
-import { notFound, redirect } from "next/navigation";
-import { api } from "@/lib/api";
-import { getBusinessBySlug } from "@/lib/businesses";
 
 export const metadata: Metadata = {
   title: "BMS Dashboard",
@@ -22,18 +22,6 @@ export const metadata: Metadata = {
   },
 };
 
-type BusinessRole = "OWNER" | "ADMIN" | "EMPLOYEE";
-
-type Business = {
-  _id: string;
-  name: string;
-  slug: string;
-  logo?: {
-    url?: string | undefined;
-    publicId?: string | undefined;
-  },
-  role: BusinessRole;
-};
 
 export default async function DashboardLayout({
   children,
@@ -74,7 +62,7 @@ export default async function DashboardLayout({
         <SidebarInset id="main-content" tabIndex={-1} className="scroll-mt-16">
           <Header />
           <InfobarProvider defaultOpen={false}>
-            <BusinessProvider business={business}>{children}</BusinessProvider>;
+            <BusinessProvider business={business}>{children}</BusinessProvider>
             <InfoSidebar side="right" />
           </InfobarProvider>
         </SidebarInset>
