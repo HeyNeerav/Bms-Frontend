@@ -1,5 +1,3 @@
-import { cookies } from "next/headers";
-
 const BASE_URL = process.env.EXTERNAL_BACKEND_URL || "http://localhost:8000/api/v1";
 
 export class ApiError extends Error {
@@ -23,12 +21,15 @@ export async function fetchWrapper<T>(
   endpoint: string,
   options: FetchOptions = {},
 ): Promise<T> {
-  const { token, businessId, headers = {}, req, onResponse, ...customConfig } = options;
+  const { token, businessId, headers = {}, req, onResponse, body, ...customConfig } = options;
+
+  const isFormData = body instanceof FormData;
 
   const defaultHeaders: Record<string, string> = {
-    "Content-Type": "application/json",
+    ...(!isFormData ? { "Content-Type": "application/json" } : {}),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
+
 
   if (req) {
     const authHeader = req.headers.get("Authorization");
@@ -44,6 +45,7 @@ export async function fetchWrapper<T>(
 
   const config: RequestInit = {
     ...customConfig,
+    body,
     headers: {
       ...defaultHeaders,
       ...headers,
@@ -64,6 +66,10 @@ export async function fetchWrapper<T>(
   return response.json();
 }
 
+function serializeBody(body: unknown): BodyInit {
+  return body instanceof FormData ? body : JSON.stringify(body) ?? "";
+}
+
 export const api = {
   get: <T>(endpoint: string, options?: FetchOptions) =>
     fetchWrapper<T>(endpoint, { ...options, method: "GET" }),
@@ -71,19 +77,19 @@ export const api = {
     fetchWrapper<T>(endpoint, {
       ...options,
       method: "POST",
-      body: JSON.stringify(body),
+      body: serializeBody(body),
     }),
   put: <T>(endpoint: string, body: unknown, options?: FetchOptions) =>
     fetchWrapper<T>(endpoint, {
       ...options,
       method: "PUT",
-      body: JSON.stringify(body),
+      body: serializeBody(body),
     }),
   patch: <T>(endpoint: string, body: unknown, options?: FetchOptions) =>
     fetchWrapper<T>(endpoint, {
       ...options,
       method: "PATCH",
-      body: JSON.stringify(body),
+      body: serializeBody(body),
     }),
   delete: <T>(endpoint: string, options?: FetchOptions) =>
     fetchWrapper<T>(endpoint, { ...options, method: "DELETE" }),
