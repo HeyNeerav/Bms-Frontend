@@ -1,5 +1,15 @@
 import { Icons } from '@/components/icons';
 
+export interface GetApiResponse<T> {
+  statusCode: number;
+  data: {
+    totalDocs: number;
+    page: number;
+    limit: number;
+    docs: T[]
+  }
+}
+
 export interface PermissionCheck {
   permission?: string;
   plan?: string;
