@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useBusiness } from '@/components/business-provider';
 
 interface CellActionProps {
   data: Product;
@@ -24,6 +25,8 @@ interface CellActionProps {
 export function CellAction({ data }: CellActionProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+
+  const business = useBusiness();
 
   const deleteMutation = useMutation({
     ...deleteProductMutation,
@@ -41,7 +44,7 @@ export function CellAction({ data }: CellActionProps) {
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onConfirm={() => deleteMutation.mutate(data.id)}
+        onConfirm={() => deleteMutation.mutate({ businessId: business._id, id: data._id })}
         loading={deleteMutation.isPending}
       />
       <DropdownMenu modal={false}>
@@ -54,7 +57,7 @@ export function CellAction({ data }: CellActionProps) {
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
           </DropdownMenuGroup>
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => router.push(`/dashboard/product/${data.id}`)}>
+            <DropdownMenuItem onClick={() => router.push(`/${business.slug}/product/${data._id}`)}>
               <Icons.edit className='mr-2 h-4 w-4' /> Update
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setOpen(true)}>

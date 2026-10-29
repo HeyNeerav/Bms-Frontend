@@ -11,19 +11,18 @@ import { CATEGORY_OPTIONS } from './options';
 
 export const columns: ColumnDef<DataTableFeatures, Product>[] = [
   {
-    accessorKey: 'photo_url',
-    header: 'IMAGE',
+    accessorKey: 'image.url',
+    header: 'Image',
+    maxSize: 130,
     cell: ({ row }) => {
       return (
-        <div className='relative aspect-square'>
-          <Image
-            src={row.getValue('photo_url')}
-            alt={row.getValue('name')}
-            fill
-            sizes='80px'
-            className='rounded-lg'
-          />
-        </div>
+        <Image
+          src={row.original.image?.url ?? '/images/placeholder.png'}
+          alt={row.getValue('name')}
+          height={92}
+          width={92}
+          className='rounded-lg'
+        />
       );
     }
   },
@@ -41,6 +40,33 @@ export const columns: ColumnDef<DataTableFeatures, Product>[] = [
     enableColumnFilter: true
   },
   {
+    accessorKey: 'price',
+    header: "Price",
+    cell: ({ cell }) => <div>${cell.getValue<Product['price']>().toFixed(2)}</div>,
+  },
+  {
+    accessorKey: "stockQuantity",
+    header: "Stock",
+  },
+  {
+    accessorKey: "sku",
+    header: "Sku",
+  },
+  {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ cell }) => {
+      const status = cell.getValue<Product['type']>();
+      const Icon = status === 'PRODUCT' ? Icons.product : Icons.userPen  ;
+      return (
+        <Badge variant='outline' className='capitalize'>
+          <Icon />
+          {status}
+        </Badge>
+      );
+    }
+  },
+  {
     id: 'category',
     accessorKey: 'category',
     enableSorting: false,
@@ -56,24 +82,15 @@ export const columns: ColumnDef<DataTableFeatures, Product>[] = [
         </Badge>
       );
     },
-    enableColumnFilter: true,
-    meta: {
-      label: 'categories',
-      variant: 'multiSelect',
-      options: CATEGORY_OPTIONS
-    }
   },
-  {
-    accessorKey: 'price',
-    header: 'PRICE'
-  },
-  {
-    accessorKey: 'description',
-    header: 'DESCRIPTION'
-  },
+  // {
+  //   accessorKey: 'description',
+  //   header: 'Desc'
+  // },
 
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />
+    maxSize: 32,
+    cell: ({ row }) => < CellAction data={ row.original } />
   }
 ];

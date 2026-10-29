@@ -8,13 +8,14 @@ import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 import { getSortingStateParser } from '@/lib/data-table-parsers';
 import { productsQueryOptions } from '../../api/queries';
 import { columns } from './columns';
+import { useBusiness } from '@/components/business-provider';
 
 export function ProductTable() {
   const [params] = useQueryStates({
     page: parseAsInteger.withDefault(1),
     perPage: parseAsInteger.withDefault(10),
     name: parseAsString,
-    category: parseAsString,
+    // category: parseAsString,
     // Same parser as the server searchParamsCache, so the prefetched query key matches
     sort: getSortingStateParser().withDefault([])
   });
@@ -23,11 +24,12 @@ export function ProductTable() {
     page: params.page,
     limit: params.perPage,
     ...(params.name && { search: params.name }),
-    ...(params.category && { categories: params.category }),
-    ...(params.sort.length > 0 && { sort: JSON.stringify(params.sort) })
+    ...(params.sort.length > 0 && { sortBy: JSON.stringify(params.sort) })
   };
 
-  const { data } = useSuspenseQuery(productsQueryOptions(filters));
+  const business = useBusiness();
+
+  const { data } = useSuspenseQuery(productsQueryOptions(business._id, filters));
 
   const pageCount = Math.ceil(data.total_products / params.perPage);
 
