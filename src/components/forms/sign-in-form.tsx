@@ -57,7 +57,7 @@ export function SignInForm({
           password: value.password,
         });
 
-        router.push("/dashboard/overview");
+        router.push("/businesses");
 
         toast("You are logged in", {
           description: "Welcome back, you have successfully logged in.",
