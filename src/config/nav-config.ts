@@ -46,6 +46,14 @@ export const navGroups: NavGroup[] = [
         items: []
       },
       {
+        title: 'Clients',
+        url: '/clients',
+        icon: 'teams',
+        shortcut: ['c', 'c'],
+        isActive: false,
+        items: []
+      },
+      {
         title: 'Product',
         url: '/product',
         icon: 'product',
@@ -54,13 +62,13 @@ export const navGroups: NavGroup[] = [
         items: []
       },
       {
-        title: 'Clients',
-        url: '/clients',
+        title: 'Invoices',
+        url: '/invoices',
         icon: 'teams',
-        shortcut: ['c', 'c'],
+        shortcut: ['i', 'i'],
         isActive: false,
         items: []
-      }
+      },
     ]
   },
   {
