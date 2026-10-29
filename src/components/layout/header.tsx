@@ -26,7 +26,7 @@ export default function Header() {
         <div className='hidden sm:block'>
           <ThemeSelector />
         </div>
-        <NotificationCenter />
+        {/* <NotificationCenter /> */}
       </div>
     </header>
   );
