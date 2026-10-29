@@ -83,7 +83,7 @@ bun install
 Create a `.env` file in the root directory and add the following environment variables:
 
 ```bash
-NEXT_PUBLIC_API_BASE_URL=your_backend_api_url
+BACKEND_API_URL=your_backend_api_url
 ```
 
 ### Development
