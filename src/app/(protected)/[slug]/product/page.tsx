@@ -7,32 +7,44 @@ import { Icons } from '@/components/icons';
 import Link from 'next/link';
 import { SearchParams } from 'nuqs/server';
 import { productInfoContent } from '@/config/infoconfig';
+import { getBusinessBySlug } from '@/lib/businesses';
+import { notFound } from 'next/navigation';
 
 export const metadata = {
   title: 'Dashboard: Products'
 };
 
 type pageProps = {
+  params: Promise<{slug: string}>
   searchParams: Promise<SearchParams>;
 };
 
 export default async function Page(props: pageProps) {
 
+  const { slug } = await props.params
+
   const searchParams = await props.searchParams;
   searchParamsCache.parse(searchParams);
+
+
+  const business = await getBusinessBySlug(slug);
+
+  if (!business) {
+    notFound();
+  }
 
   return (
     <PageContainer
       pageTitle='Products'
-      pageDescription='Manage products (React Query + nuqs table pattern.)'
+      pageDescription='Manage products.'
       infoContent={productInfoContent}
       pageHeaderAction={
-        <Link href='/dashboard/product/new' className={cn(buttonVariants(), 'text-xs md:text-sm')}>
+        <Link href='product/new' className={cn(buttonVariants(), 'text-xs md:text-sm')}>
           <Icons.add className='mr-2 h-4 w-4' /> Add New
         </Link>
       }
     >
-      <ProductListingPage />
+      <ProductListingPage businessId={business._id} />
     </PageContainer>
   );
 }
