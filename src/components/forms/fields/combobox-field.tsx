@@ -1,80 +1,130 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { Button } from '@/components/ui/button';
+import * as React from "react";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
-} from '@/components/ui/command';
-import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Icons } from '@/components/icons';
-import { cn } from '@/lib/utils';
-import { useFieldContext, useFieldInvalid, type BaseFieldProps } from '@/lib/form-context';
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Icons } from "@/components/icons";
+import { cn } from "@/lib/utils";
+import {
+  useFieldContext,
+  useFieldInvalid,
+  type BaseFieldProps,
+} from "@/lib/form-context";
 
-/** Searchable select — Popover + Command per the shadcn combobox pattern. */
+type ComboboxOption = {
+  value: string;
+  label: string;
+  disabled?: boolean;
+};
+
+type ComboboxFieldProps = BaseFieldProps & {
+  options: ComboboxOption[];
+  placeholder?: string;
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+  searchValue?: string;
+  loading?: boolean;
+  onSearchChange?: (value: string) => void;
+  onOptionSelect?: (value: string) => void;
+};
+
 export function ComboboxField({
   label,
   description,
   required,
   options,
-  placeholder = 'Select an option',
-  searchPlaceholder = 'Search...',
-  emptyMessage = 'No results found.'
-}: BaseFieldProps & {
-  options: { value: string; label: string; disabled?: boolean }[];
-  placeholder?: string;
-  searchPlaceholder?: string;
-  emptyMessage?: string;
-}) {
+  placeholder = "Select an option",
+  searchPlaceholder = "Search...",
+  emptyMessage = "No results found.",
+  searchValue,
+  onSearchChange,
+  loading = false,
+  onOptionSelect,
+}: ComboboxFieldProps) {
   const field = useFieldContext<string>();
   const isInvalid = useFieldInvalid();
   const [open, setOpen] = React.useState(false);
+  const [localSearch, setLocalSearch] = React.useState("");
+
   const selected = options.find((o) => o.value === field.state.value);
   const listboxId = `${field.name}-listbox`;
+
+  const search = searchValue ?? localSearch;
+  const handleSearchChange = onSearchChange ?? setLocalSearch;
 
   return (
     <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={field.name}>
         {label}
-        {required && ' *'}
+        {required && " *"}
       </FieldLabel>
+
       <Popover
         open={open}
         onOpenChange={(next) => {
           setOpen(next);
-          if (!next) field.handleBlur();
+          if (!next) {
+            field.handleBlur();
+            handleSearchChange("");
+          }
         }}
       >
         <PopoverTrigger
           render={
             <Button
               id={field.name}
-              variant='outline'
-              role='combobox'
+              variant="outline"
+              role="combobox"
               aria-controls={listboxId}
               aria-expanded={open}
               aria-invalid={isInvalid}
               aria-describedby={isInvalid ? `${field.name}-error` : undefined}
               className={cn(
-                'w-full justify-between font-normal',
-                !selected && 'text-muted-foreground'
+                "w-full justify-between font-normal",
+                !selected && "text-muted-foreground",
               )}
             />
           }
         >
-          {selected?.label ?? placeholder}
-          <Icons.chevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          <span className="truncate">
+            {selected?.label ?? placeholder}
+          </span>
+          <Icons.chevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </PopoverTrigger>
-        <PopoverContent className='w-(--anchor-width) p-0'>
-          <Command>
-            <CommandInput placeholder={searchPlaceholder} />
+
+        <PopoverContent className="w-(--anchor-width) p-0">
+          <Command shouldFilter={!onSearchChange}>
+            <CommandInput
+              placeholder={searchPlaceholder}
+              value={search}
+              onValueChange={handleSearchChange}
+            />
+
             <CommandList id={listboxId}>
-              <CommandEmpty>{emptyMessage}</CommandEmpty>
+              {loading ? (
+                <CommandEmpty>Searching...</CommandEmpty>
+              ) : (
+                <CommandEmpty>{emptyMessage}</CommandEmpty>
+              )}
+
               <CommandGroup>
                 {options.map((opt) => (
                   <CommandItem
@@ -82,15 +132,19 @@ export function ComboboxField({
                     value={opt.value}
                     disabled={opt.disabled}
                     keywords={[opt.label]}
-                    onSelect={(next) => {
-                      field.handleChange(next);
+                    onSelect={() => {
+                      onOptionSelect?.(opt.value);
+                      field.handleChange(opt.value);
                       setOpen(false);
+                      handleSearchChange("");
                     }}
                   >
                     <Icons.check
                       className={cn(
-                        'mr-2 h-4 w-4',
-                        field.state.value === opt.value ? 'opacity-100' : 'opacity-0'
+                        "mr-2 h-4 w-4",
+                        field.state.value === opt.value
+                          ? "opacity-100"
+                          : "opacity-0",
                       )}
                     />
                     {opt.label}
@@ -101,8 +155,15 @@ export function ComboboxField({
           </Command>
         </PopoverContent>
       </Popover>
+
       {description && <FieldDescription>{description}</FieldDescription>}
-      {isInvalid && <FieldError id={`${field.name}-error`} errors={field.state.meta.errors} />}
+
+      {isInvalid && (
+        <FieldError
+          id={`${field.name}-error`}
+          errors={field.state.meta.errors}
+        />
+      )}
     </Field>
   );
 }
