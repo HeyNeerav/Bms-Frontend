@@ -12,8 +12,8 @@ export const createProductMutation = mutationOptions({
     businessId: string;
     data: ProductMutationPayload;
   }) => createProduct(businessId, data),
-  onSuccess: () => {
-    getQueryClient().invalidateQueries({ queryKey: productKeys.all });
+  onSuccess: (_, { businessId }) => {
+    getQueryClient().invalidateQueries({ queryKey: productKeys.business(businessId) });
   },
 });
 
@@ -27,8 +27,8 @@ export const updateProductMutation = mutationOptions({
     id: string;
     values: ProductMutationPayload;
   }) => updateProduct(businessId, id, values),
-  onSuccess: () => {
-    getQueryClient().invalidateQueries({ queryKey: productKeys.all });
+  onSuccess: (_, { businessId }) => {
+    getQueryClient().invalidateQueries({ queryKey: productKeys.business(businessId) });
   },
 });
 

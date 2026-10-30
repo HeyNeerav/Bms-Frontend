@@ -6,6 +6,8 @@ export type { Product };
 
 export const productKeys = {
   all: ["products"] as const,
+  business: (businessId: string) =>
+    [...productKeys.all, businessId] as const,
   list: (businessId: string, filters: ProductFilters) =>
     [...productKeys.all, businessId, "list", filters] as const,
   detail: (businessId: string, id: string) =>

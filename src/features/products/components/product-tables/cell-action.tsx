@@ -33,7 +33,7 @@ export function CellAction({ data }: CellActionProps) {
   const deleteMutation = useMutation({
     ...deleteProductMutation,
     onSuccess: () => {
-      getQueryClient().invalidateQueries({ queryKey: productKeys.all });
+      getQueryClient().invalidateQueries({ queryKey: productKeys.business(business._id) });
       toast.success('Product deleted successfully');
       setOpen(false);
     },
