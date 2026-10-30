@@ -58,8 +58,12 @@ export async function fetchWrapper<T>(
   onResponse?.(response);
 
   if (!response.ok) {
-    const errorBody = await response.text();
-    throw new ApiError(response.status, errorBody || response.statusText);
+    const errorBody = await response.json().catch(() => null);
+
+    throw new ApiError(
+      response.status,
+      errorBody?.message || response.statusText,
+    );
   }
 
   if (response.status === 204) return {} as T;
