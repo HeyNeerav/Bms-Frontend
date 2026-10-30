@@ -88,7 +88,7 @@ export default function InvoiceForm({
       clientId: initialData?.client ?? "",
       items: (initialData?.items ?? []) as InvoiceFormValues["items"],
       discount: initialData?.discount ?? 0,
-      tax: initialData?.tax ?? 0,
+      tax: initialData?.tax ?? 18,
       notes: initialData?.notes ?? "",
       dueDate: initialData?.dueDate ?? undefined,
     } as InvoiceFormValues,

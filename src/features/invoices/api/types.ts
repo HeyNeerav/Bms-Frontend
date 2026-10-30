@@ -40,11 +40,11 @@ export interface InvoiceMutationPayload {
 }
 
 export type InvoiceFilters = {
-  page?: number;
-  limit?: number;
-  categories?: string;
   search?: string;
-  sort?: string;
+  limit?: number;
+  page?: number;
+  sortBy?: string;
+  sortOrder?: -1 | 1;
 };
 
 export type InvoicesResponse = {

@@ -9,6 +9,12 @@ import { formatPrice } from "@/lib/format";
 
 export const columns: ColumnDef<DataTableFeatures, Invoice>[] = [
   {
+    id: "invoiceNumber",
+    accessorKey: "invoiceNumber",
+    header: "Invoice Number",
+    cell: ({ cell }) => <div>{cell.getValue<Invoice["invoiceNumber"]>()}</div>,
+  },
+  {
     id: "client",
     accessorKey: "client",
     header: "Client",
@@ -22,15 +28,36 @@ export const columns: ColumnDef<DataTableFeatures, Invoice>[] = [
     ),
   },
   {
+    accessorKey: "subtotal",
+    header: "Subtotal",
+    cell: ({ cell }) => (
+      <div>{formatPrice(cell.getValue<Invoice["subtotal"]>())}</div>
+    ),
+    size: 120,
+  },
+  {
+    accessorKey: "discount",
+    header: "Discount",
+    cell: ({ cell }) => (
+      <div>{cell.getValue<Invoice["discount"]>()}%</div>
+    ),
+    size: 80,
+  },
+  {
+    accessorKey: "tax",
+    header: "Tax",
+    cell: ({ cell }) => (
+      <div>{cell.getValue<Invoice["tax"]>()}%</div>
+    ),
+    size: 60
+  },
+  {
     accessorKey: "total",
     header: "Total",
     cell: ({ cell }) => (
       <div>{formatPrice(cell.getValue<Invoice["total"]>())}</div>
     ),
-  },
-  {
-    accessorKey: "tax",
-    header: "Tax",
+    size: 120,
   },
   {
     accessorKey: "dueDate",
