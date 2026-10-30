@@ -50,6 +50,6 @@ export type ProductMutationPayload = {
   stockQuantity?: number;
   sku?: string | undefined;
   imageUrl?: File | null;
-  category: string;
-  description: string;
+  category?: string;
+  description?: string;
 };
