@@ -35,7 +35,4 @@ export const updateProductMutation = mutationOptions({
 export const deleteProductMutation = mutationOptions({
   mutationFn: ({ businessId, id }: { businessId: string; id: string }) =>
     deleteProduct(businessId, id),
-  onSuccess: () => {
-    getQueryClient().invalidateQueries({ queryKey: productKeys.all });
-  },
 });

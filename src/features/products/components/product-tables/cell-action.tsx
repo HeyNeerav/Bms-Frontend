@@ -17,6 +17,8 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useBusiness } from '@/components/business-provider';
+import { getQueryClient } from '@/lib/query-client';
+import { productKeys } from '../../api/queries';
 
 interface CellActionProps {
   data: Product;
@@ -31,6 +33,7 @@ export function CellAction({ data }: CellActionProps) {
   const deleteMutation = useMutation({
     ...deleteProductMutation,
     onSuccess: () => {
+      getQueryClient().invalidateQueries({ queryKey: productKeys.all });
       toast.success('Product deleted successfully');
       setOpen(false);
     },
