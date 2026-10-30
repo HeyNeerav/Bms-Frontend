@@ -7,7 +7,7 @@ import type { DataTableFeatures } from '@/lib/data-table-features';
 import { Icons } from '@/components/icons';
 import Image from 'next/image';
 import { CellAction } from './cell-action';
-import { CATEGORY_OPTIONS } from './options';
+import { formatPrice } from '@/lib/format';
 
 export const columns: ColumnDef<DataTableFeatures, Product>[] = [
   {
@@ -42,7 +42,7 @@ export const columns: ColumnDef<DataTableFeatures, Product>[] = [
   {
     accessorKey: 'price',
     header: "Price",
-    cell: ({ cell }) => <div>${cell.getValue<Product['price']>().toFixed(2)}</div>,
+    cell: ({ cell }) => <div>{formatPrice(cell.getValue<Product['price']>())}</div>,
   },
   {
     accessorKey: "stockQuantity",

@@ -5,6 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { DataTableFeatures } from "@/lib/data-table-features";
 import { Icons } from "@/components/icons";
 import { CellAction } from "./cell-action";
+import { formatPrice } from "@/lib/format";
 
 export const columns: ColumnDef<DataTableFeatures, Invoice>[] = [
   {
@@ -24,7 +25,7 @@ export const columns: ColumnDef<DataTableFeatures, Invoice>[] = [
     accessorKey: "total",
     header: "Total",
     cell: ({ cell }) => (
-      <div>${cell.getValue<Invoice["total"]>().toFixed(2)}</div>
+      <div>{formatPrice(cell.getValue<Invoice["total"]>())}</div>
     ),
   },
   {

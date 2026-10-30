@@ -15,3 +15,16 @@ export function formatDate(
     return '';
   }
 }
+
+export const formatPrice = (price: number | string) => {
+  
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    trailingZeroDisplay: 'stripIfInteger',
+  });
+
+
+  return formatter.format(Number(price));
+}
+
