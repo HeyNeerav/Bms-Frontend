@@ -17,6 +17,9 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useBusiness } from '@/components/business-provider';
+import { getQueryClient } from '@/lib/query-client';
+import { invoiceKeys } from '../../api/queries';
+import { ApiError } from '@/lib/api';
 
 interface CellActionProps {
   data: Invoice;
@@ -31,11 +34,17 @@ export function CellAction({ data }: CellActionProps) {
   const deleteMutation = useMutation({
     ...deleteInvoiceMutation,
     onSuccess: () => {
+      getQueryClient().invalidateQueries({ queryKey: invoiceKeys.all })
       toast.success('Invoice deleted successfully');
       setOpen(false);
     },
-    onError: () => {
-      toast.error('Failed to delete product');
+    onError: (error: any) => {
+      toast.error('Failed to delete product', {
+        description:
+          error instanceof Error || error instanceof ApiError
+            ? error.message
+            : "Unknown error",
+      });
     }
   });
 

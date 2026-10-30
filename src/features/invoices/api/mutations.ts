@@ -35,7 +35,4 @@ export const updateInvoiceMutation = mutationOptions({
 export const deleteInvoiceMutation = mutationOptions({
   mutationFn: ({ businessId, id }: { businessId: string; id: string }) =>
     deleteInvoice(businessId, id),
-  onSuccess: () => {
-    getQueryClient().invalidateQueries({ queryKey: invoiceKeys.all });
-  },
 });
