@@ -69,6 +69,35 @@ export const navGroups: NavGroup[] = [
         isActive: false,
         items: []
       },
+      {
+        title: 'Payments',
+        url: '/payments',
+        icon: 'creditCard',
+        shortcut: ['p', 'y'],
+        isActive: false,
+        items: []
+      }
     ]
   },
+  {
+    label: "Management",
+    items: [
+      {
+        title: "Members",
+        url: "/members",
+        icon: "employee",
+        shortcut: ["m", "m"],
+        isActive: false,
+        items: [],
+      },
+      {
+        title: "Settings",
+        url: "/settings",
+        icon: "settings",
+        shortcut: ["s", "s"],
+        isActive: false,
+        items: [],
+      }
+    ]
+  }
 ];
