@@ -24,7 +24,7 @@ export default async function Page(props: PageProps) {
   }
 
   if (params.productId !== 'new') {
-    void queryClient.prefetchQuery(productByIdOptions(business._id, params.productId));
+    void queryClient.query(productByIdOptions(business._id, params.productId));
   }
 
   return (

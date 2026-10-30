@@ -18,7 +18,7 @@ export default function ProductListingPage({ businessId }: { businessId: string 
   };
 
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(productsQueryOptions(businessId, filters));
+  void queryClient.query(productsQueryOptions(businessId, filters));
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
