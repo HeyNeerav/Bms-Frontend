@@ -6,7 +6,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/lib/data-table-features';
 import { Icons } from '@/components/icons';
 import { CellAction } from './cell-action';
-import { ROLE_OPTIONS } from './options';
 
 export const columns: ColumnDef<DataTableFeatures, User>[] = [
   {
@@ -66,5 +65,10 @@ export const columns: ColumnDef<DataTableFeatures, User>[] = [
         {row.original.notes}
       </div>
     ),
-  }
+  },
+  {
+    id: "actions",
+    maxSize: 32,
+    cell: ({ row }) => <CellAction data={row.original} />,
+  },
 ];
