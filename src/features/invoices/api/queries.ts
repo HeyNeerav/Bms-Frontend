@@ -6,6 +6,8 @@ export type { Invoice };
 
 export const invoiceKeys = {
   all: ["invoices"] as const,
+  business: (businessId: string) =>
+    [...invoiceKeys.all, businessId] as const,
   list: (businessId: string, filters: InvoiceFilters) =>
     [...invoiceKeys.all, businessId, "list", filters] as const,
   detail: (businessId: string, id: string) =>

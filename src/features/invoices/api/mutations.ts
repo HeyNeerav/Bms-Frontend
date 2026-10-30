@@ -12,8 +12,8 @@ export const createInvoiceMutation = mutationOptions({
     businessId: string;
     data: InvoiceMutationPayload;
   }) => createInvoice(businessId, data),
-  onSuccess: () => {
-    getQueryClient().invalidateQueries({ queryKey: invoiceKeys.all });
+  onSuccess: (_, { businessId }) => {
+    getQueryClient().invalidateQueries({ queryKey: invoiceKeys.business(businessId) });
   },
 });
 
@@ -27,8 +27,8 @@ export const updateInvoiceMutation = mutationOptions({
     id: string;
     values: InvoiceMutationPayload;
   }) => updateInvoice(businessId, id, values),
-  onSuccess: () => {
-    getQueryClient().invalidateQueries({ queryKey: invoiceKeys.all });
+  onSuccess: (_, { businessId }) => {
+    getQueryClient().invalidateQueries({ queryKey: invoiceKeys.business(businessId) });
   },
 });
 
