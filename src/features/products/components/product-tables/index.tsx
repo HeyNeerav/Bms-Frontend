@@ -4,26 +4,34 @@ import { DataTable } from '@/components/data-table/data-table';
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
 import { useDataTable } from '@/hooks/use-data-table';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
-import { getSortingStateParser } from '@/lib/data-table-parsers';
+import { parseAsInteger, useQueryStates } from 'nuqs';
+import { getColumnFilterParser, getSortingStateParser } from '@/lib/data-table-parsers';
 import { productsQueryOptions } from '../../api/queries';
 import { columns } from './columns';
 import { useBusiness } from '@/components/business-provider';
+import { useDebounce } from '@/hooks/use-debounce';
 
 export function ProductTable() {
   const [params] = useQueryStates({
     page: parseAsInteger.withDefault(1),
     perPage: parseAsInteger.withDefault(10),
-    name: parseAsString,
-    // category: parseAsString,
-    // Same parser as the server searchParamsCache, so the prefetched query key matches
     sort: getSortingStateParser().withDefault([])
   });
+
+  const [nameFilters] = useQueryStates({
+    name: getColumnFilterParser('name', 'text')
+  });
+
+  const search = nameFilters.name?.[0]?.value;
+  const debouncedSearch = useDebounce(
+    typeof search === 'string' ? search : '',
+    500
+  );
 
   const filters = {
     page: params.page,
     limit: params.perPage,
-    ...(params.name && { search: params.name }),
+    ...(debouncedSearch && { search: debouncedSearch }),
     ...(params.sort.length > 0 && { sortBy: JSON.stringify(params.sort) })
   };
 
