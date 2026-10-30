@@ -32,6 +32,7 @@ import {
 type ComboboxOption = {
   value: string;
   label: string;
+  description?: string;
   disabled?: boolean;
 };
 
@@ -131,7 +132,7 @@ export function ComboboxField({
                     key={opt.value}
                     value={opt.value}
                     disabled={opt.disabled}
-                    keywords={[opt.label]}
+                    keywords={[opt.label, opt.description ?? ""]}
                     onSelect={() => {
                       onOptionSelect?.(opt.value);
                       field.handleChange(opt.value);
@@ -141,13 +142,21 @@ export function ComboboxField({
                   >
                     <Icons.check
                       className={cn(
-                        "mr-2 h-4 w-4",
+                        "mr-2 h-4 w-4 shrink-0",
                         field.state.value === opt.value
                           ? "opacity-100"
                           : "opacity-0",
                       )}
                     />
-                    {opt.label}
+
+                    <div className="flex min-w-0 flex-col">
+                      <span className="truncate font-medium">{opt.label}</span>
+                      {opt.description && (
+                        <span className="truncate text-xs text-muted-foreground">
+                          {opt.description}
+                        </span>
+                      )}
+                    </div>
                   </CommandItem>
                 ))}
               </CommandGroup>
