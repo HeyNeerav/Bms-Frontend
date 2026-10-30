@@ -42,7 +42,11 @@ export default function AppSidebar({ slug }: { slug: string }) {
       <SidebarContent className='overflow-x-hidden'>
         {filteredGroups.map((group) => (
           <SidebarGroup key={group.label || 'ungrouped'} className='py-0'>
-            {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
+            {group.label &&
+              <SidebarGroupLabel className='text-xs font-medium tracking-wide text-muted-foreground pt-4 mb-1 h-auto border-t border-sidebar-border mt-4 rounded-none px-2'>
+                {group.label}
+              </SidebarGroupLabel>
+            }
             <SidebarMenu>
               {group.items.map((item) => {
                 const Icon = item.icon ? Icons[item.icon] : Icons.logo;
