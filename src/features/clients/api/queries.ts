@@ -6,10 +6,10 @@ export type { User };
 
 export const userKeys = {
   all: ["users"] as const,
-
+  business: (businessId: string) =>
+    [...userKeys.all, businessId] as const,
   list: (businessId: string, filters: UserFilters) =>
     [...userKeys.all, businessId, "list", filters] as const,
-
   detail: (businessId: string, id: string) =>
     [...userKeys.all, businessId, "detail", id] as const,
 };

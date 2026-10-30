@@ -21,6 +21,9 @@ import { toast } from "sonner";
 import { userSchema, type UserFormValues } from "../schemas/user";
 import { ROLE_OPTIONS } from "./users-table/options";
 import { useBusiness } from "@/components/business-provider";
+import { userKeys } from "../api/queries";
+import { getQueryClient } from "@/lib/query-client";
+import { ApiError } from "@/lib/api";
 
 const STATUS_OPTIONS = [
   { value: "Active", label: "Active" },
@@ -46,20 +49,38 @@ export function UserFormSheet({
   const createMutation = useMutation({
     ...createUserMutation,
     onSuccess: () => {
+      getQueryClient().invalidateQueries({
+        queryKey: userKeys.business(business._id),
+      });
       toast.success("User created");
       onOpenChange(false);
       form.reset();
     },
-    onError: () => toast.error("Couldn't create user. Try again."),
+    onError: (error: any) =>
+      toast.error("Couldn't create user. Try again.", {
+        description:
+          error instanceof Error || error instanceof ApiError
+            ? error.message
+            : "Unknown error",
+      }),
   });
 
   const updateMutation = useMutation({
     ...updateUserMutation,
     onSuccess: () => {
+      getQueryClient().invalidateQueries({
+        queryKey: userKeys.business(business._id),
+      });
       toast.success("User updated");
       onOpenChange(false);
     },
-    onError: () => toast.error("Couldn't update user. Try again."),
+    onError: (error: any) =>
+      toast.error("Couldn't update user. Try again.", {
+        description:
+          error instanceof Error || error instanceof ApiError
+            ? error.message
+            : "Unknown error",
+      }),
   });
 
   const form = useAppForm({
