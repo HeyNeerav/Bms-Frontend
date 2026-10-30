@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { productsQueryOptions } from "@/features/products/api/queries";
 import { ProductPicker } from "@/components/forms/product-picker";
 import { InvoiceItems } from "./invoice-items";
+import { ApiError } from "@/lib/api";
 
 
 type SelectedProduct = {
@@ -56,8 +57,13 @@ export default function InvoiceForm({
       toast.success("Invoice created");
       router.push(`/${business?.slug}/invoices`);
     },
-    onError: () => {
-      toast.error("Couldn't create invoice. Try again.");
+    onError: (error: any) => {
+      toast.error("Couldn't create invoice. Try again.", {
+        description:
+          error instanceof Error || error instanceof ApiError
+            ? error.message
+            : "Unknown error",
+      });
     },
   });
 
@@ -67,8 +73,13 @@ export default function InvoiceForm({
       toast.success("Invoice updated");
       router.push(`/${business?.slug}/invoices`);
     },
-    onError: () => {
-      toast.error("Couldn't update invoice. Try again.");
+    onError: (error: any) => {
+      toast.error("Couldn't update invoice. Try again.", {
+        description:
+          error instanceof Error || error instanceof ApiError
+            ? error.message
+            : "Unknown error",
+      });
     },
   });
 
