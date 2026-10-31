@@ -2,7 +2,8 @@ import {
   createSearchParamsCache,
   createSerializer,
   parseAsInteger,
-  parseAsString
+  parseAsString,
+  parseAsStringLiteral
 } from 'nuqs/server';
 
 import { getSortingStateParser } from '@/lib/data-table-parsers';
@@ -15,7 +16,8 @@ export const searchParams = {
   gender: parseAsString,
   category: parseAsString,
   role: parseAsString,
-  sort: getSortingStateParser().withDefault([])
+  sort: getSortingStateParser().withDefault([]),
+  period: parseAsStringLiteral(['7d', '30d', '90d', '12m', 'year', 'lifetime']).withDefault('30d'),
 };
 
 export const searchParamsCache = createSearchParamsCache(searchParams);
