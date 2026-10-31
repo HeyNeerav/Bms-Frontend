@@ -74,6 +74,17 @@ export function CellAction({ data }: CellActionProps) {
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() =>
+                window.open(
+                  `/${business.slug}/invoices/${data._id}/pdf`,
+                  "_blank",
+                  "noopener,noreferrer",
+                )
+              }
+            >
+              <Icons.fileTypePdf className="mr-2 h-4 w-4" /> PDF
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
                 router.push(`/${business.slug}/invoices/${data._id}`)
               }
             >
