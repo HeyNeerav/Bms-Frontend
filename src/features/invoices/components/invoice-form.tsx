@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { createInvoiceMutation, updateInvoiceMutation } from "../api/mutations";
 import type { Invoice } from "../api/types";
 import { useBusiness } from "@/components/business-provider";
-import { usersQueryOptions } from "@/features/clients/api/queries";
+import { clientsQueryOptions } from "@/features/clients/api/queries";
 import { useEffect, useState } from "react";
 import { productsQueryOptions } from "@/features/products/api/queries";
 import { ProductPicker } from "@/components/forms/product-picker";
@@ -124,7 +124,7 @@ export default function InvoiceForm({
   const debouncedClientSearch = useDebouncedValue(clientSearch, 300);
 
   const { data: clientQueryData, isLoading: isClientLoading } = useQuery(
-    usersQueryOptions(business._id, {search: debouncedClientSearch}),
+    clientsQueryOptions(business._id, {search: debouncedClientSearch}),
   );
 
   const [productSearch, setProductSearch] = useState("");
@@ -227,9 +227,9 @@ export default function InvoiceForm({
                     loading={isClientLoading}
                     required
                     options={
-                      clientQueryData?.users?.map((user) => ({
-                        value: user._id,
-                        label: user.name,
+                      clientQueryData?.clients?.map((client) => ({
+                        value: client._id,
+                        label: client.name,
                       })) || []
                     }
                   />

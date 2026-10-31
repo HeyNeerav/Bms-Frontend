@@ -1,4 +1,4 @@
-import { User } from "@/features/clients/api/types";
+import { Client } from "@/features/clients/api/types";
 
 export type InvoiceStatus = "DRAFT" | "SENT" | "PAID" | "OVERDUE" | "CANCELLED"
 
@@ -13,7 +13,7 @@ export interface InvoiceItem {
 export interface Invoice {
   _id: string;
   businessId: string;
-  client: Pick<User, "_id" | "name" | "email">;
+  client: Pick<Client, "_id" | "name" | "email">;
   invoiceNumber: string;
   items: InvoiceItem[];
   subtotal: number;

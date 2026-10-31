@@ -6,11 +6,11 @@ import { useDataTable } from '@/hooks/use-data-table';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 import { getSortingStateParser } from '@/lib/data-table-parsers';
-import { usersQueryOptions } from '../../api/queries';
+import { clientsQueryOptions } from '../../api/queries';
 import { columns } from './columns';
 import { useBusiness } from '@/components/business-provider';
 
-export function UsersTable() {
+export function ClientsTable() {
   const business = useBusiness();
 
   const [params] = useQueryStates({
@@ -28,12 +28,12 @@ export function UsersTable() {
     ...(params.sort.length > 0 && { sort: JSON.stringify(params.sort) })
   };
 
-  const { data } = useSuspenseQuery(usersQueryOptions(business._id, filters));
+  const { data } = useSuspenseQuery(clientsQueryOptions(business._id, filters));
 
-  const pageCount = Math.ceil(data.total_users / params.perPage);
+  const pageCount = Math.ceil(data.total_clients / params.perPage);
 
   const { table } = useDataTable({
-    data: data.users,
+    data: data.clients,
     columns,
     pageCount,
     shallow: true,
@@ -50,7 +50,7 @@ export function UsersTable() {
   );
 }
 
-export function UsersTableSkeleton() {
+export function ClientsTableSkeleton() {
   return (
     <div className='flex flex-1 animate-pulse flex-col gap-4'>
       <div className='bg-muted h-10 w-full rounded' />

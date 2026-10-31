@@ -9,20 +9,20 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteUserMutation } from "../../api/mutations";
-import type { User } from "../../api/types";
+import { deleteClientMutation } from "../../api/mutations";
+import type { Client } from "../../api/types";
 import { Icons } from "@/components/icons";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { UserFormSheet } from "../user-form-sheet";
+import { ClientFormSheet } from "../client-form-sheet";
 import { useBusiness } from "@/components/business-provider";
 import { getQueryClient } from "@/lib/query-client";
-import { userKeys } from "../../api/queries";
+import { clientKeys } from "../../api/queries";
 import { ApiError } from "@/lib/api";
 
 interface CellActionProps {
-  data: User;
+  data: Client;
 }
 
 export function CellAction({ data }: CellActionProps) {
@@ -32,16 +32,16 @@ export function CellAction({ data }: CellActionProps) {
   const business = useBusiness();
 
   const deleteMutation = useMutation({
-    ...deleteUserMutation,
+    ...deleteClientMutation,
     onSuccess: () => {
       getQueryClient().invalidateQueries({
-        queryKey: userKeys.business(business._id),
+        queryKey: clientKeys.business(business._id),
       });
-      toast.success("User deleted successfully");
+      toast.success("Client deleted successfully");
       setDeleteOpen(false);
     },
     onError: (error: any) => {
-      toast.error("Failed to delete user", {
+      toast.error("Failed to delete client", {
         description:
           error instanceof Error || error instanceof ApiError
             ? error.message
@@ -60,7 +60,7 @@ export function CellAction({ data }: CellActionProps) {
         }
         loading={deleteMutation.isPending}
       />
-      <UserFormSheet user={data} open={editOpen} onOpenChange={setEditOpen} />
+      <ClientFormSheet client={data} open={editOpen} onOpenChange={setEditOpen} />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger
           render={<Button variant="ghost" className="h-8 w-8 p-0" />}

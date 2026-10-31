@@ -1,18 +1,18 @@
 import { mutationOptions } from "@tanstack/react-query";
-import { createUser, updateUser, deleteUser } from "./service";
-import type { UserMutationPayload } from "./types";
+import { createClient, updateClient, deleteClient } from "./service";
+import type { ClientMutationPayload } from "./types";
 
-export const createUserMutation = mutationOptions({
-  mutationFn: ({businessId, data}: {businessId: string; data: UserMutationPayload}) =>
-    createUser(businessId, data),
+export const createClientMutation = mutationOptions({
+  mutationFn: ({businessId, data}: {businessId: string; data: ClientMutationPayload}) =>
+    createClient(businessId, data),
 });
 
-export const updateUserMutation = mutationOptions({
-  mutationFn: ({ businessId, id, values }: { businessId: string; id: string; values: UserMutationPayload }) =>
-    updateUser(businessId, id, values),
+export const updateClientMutation = mutationOptions({
+  mutationFn: ({ businessId, id, values }: { businessId: string; id: string; values: ClientMutationPayload }) =>
+    updateClient(businessId, id, values),
 });
 
-export const deleteUserMutation = mutationOptions({
-  mutationFn: ({businessId, id}: {businessId: string; id: string}) => deleteUser(businessId, id),
+export const deleteClientMutation = mutationOptions({
+  mutationFn: ({businessId, id}: {businessId: string; id: string}) => deleteClient(businessId, id),
 
 });

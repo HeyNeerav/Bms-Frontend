@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const userSchema = z.object({
+export const clientSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.email("Invalid email address"),
   phone: z.string().optional(),
@@ -11,4 +11,4 @@ export const userSchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
-export type UserFormValues = z.infer<typeof userSchema>;
+export type ClientFormValues = z.infer<typeof clientSchema>;

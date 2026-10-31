@@ -1,21 +1,21 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getUsers } from "./service";
-import type { User, UserFilters } from "./types";
+import { getClients } from "./service";
+import type { Client, ClientFilters } from "./types";
 
-export type { User };
+export type { Client };
 
-export const userKeys = {
-  all: ["users"] as const,
+export const clientKeys = {
+  all: ["clients"] as const,
   business: (businessId: string) =>
-    [...userKeys.all, businessId] as const,
-  list: (businessId: string, filters: UserFilters) =>
-    [...userKeys.all, businessId, "list", filters] as const,
+    [...clientKeys.all, businessId] as const,
+  list: (businessId: string, filters: ClientFilters) =>
+    [...clientKeys.all, businessId, "list", filters] as const,
   detail: (businessId: string, id: string) =>
-    [...userKeys.all, businessId, "detail", id] as const,
+    [...clientKeys.all, businessId, "detail", id] as const,
 };
 
-export const usersQueryOptions = (businessId: string, filters: UserFilters) =>
+export const clientsQueryOptions = (businessId: string, filters: ClientFilters) =>
   queryOptions({
-    queryKey: userKeys.list(businessId, filters),
-    queryFn: () => getUsers(businessId, filters),
+    queryKey: clientKeys.list(businessId, filters),
+    queryFn: () => getClients(businessId, filters),
   });

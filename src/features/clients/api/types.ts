@@ -1,6 +1,4 @@
-// export type { User } from '@/constants/mock-api-users';
-
-export type User = {
+export type Client = {
   _id: string;
   name: string;
   email: string;
@@ -12,24 +10,24 @@ export type User = {
   tags?: string[];
 }
 
-export type UserFilters = {
+export type ClientFilters = {
   page?: number;
   limit?: number;
   search?: string;
   sort?: string;
 };
 
-export type UsersResponse = {
+export type ClientsResponse = {
   success: boolean;
   time: string;
   message: string;
-  total_users: number;
+  total_clients: number;
   offset: number;
   limit: number;
-  users: User[];
+  clients: Client[];
 };
 
-export type UserMutationPayload = {
+export type ClientMutationPayload = {
   name?: string;
   email?: string;
   phone?: string;

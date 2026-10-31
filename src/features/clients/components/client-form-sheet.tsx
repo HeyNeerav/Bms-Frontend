@@ -15,13 +15,12 @@ import {
 } from "@/components/ui/sheet";
 import { Icons } from "@/components/icons";
 import { useMutation } from "@tanstack/react-query";
-import { createUserMutation, updateUserMutation } from "../api/mutations";
-import type { User } from "../api/types";
+import { createClientMutation, updateClientMutation } from "../api/mutations";
+import type { Client } from "../api/types";
 import { toast } from "sonner";
-import { userSchema, type UserFormValues } from "../schemas/user";
-import { ROLE_OPTIONS } from "./users-table/options";
+import { clientSchema, type ClientFormValues } from "../schemas/client";
 import { useBusiness } from "@/components/business-provider";
-import { userKeys } from "../api/queries";
+import { clientKeys } from "../api/queries";
 import { getQueryClient } from "@/lib/query-client";
 import { ApiError } from "@/lib/api";
 
@@ -31,33 +30,33 @@ const STATUS_OPTIONS = [
   { value: "Invited", label: "Invited" },
 ];
 
-interface UserFormSheetProps {
-  user?: User;
+interface ClientFormSheetProps {
+  client?: Client;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function UserFormSheet({
-  user,
+export function ClientFormSheet({
+  client,
   open,
   onOpenChange,
-}: UserFormSheetProps) {
-  const isEdit = !!user;
+}: ClientFormSheetProps) {
+  const isEdit = !!client;
 
   const business = useBusiness();
 
   const createMutation = useMutation({
-    ...createUserMutation,
+    ...createClientMutation,
     onSuccess: () => {
       getQueryClient().invalidateQueries({
-        queryKey: userKeys.business(business._id),
+        queryKey: clientKeys.business(business._id),
       });
-      toast.success("User created");
+      toast.success("Client created");
       onOpenChange(false);
       form.reset();
     },
     onError: (error: any) =>
-      toast.error("Couldn't create user. Try again.", {
+      toast.error("Couldn't create client. Try again.", {
         description:
           error instanceof Error || error instanceof ApiError
             ? error.message
@@ -66,16 +65,16 @@ export function UserFormSheet({
   });
 
   const updateMutation = useMutation({
-    ...updateUserMutation,
+    ...updateClientMutation,
     onSuccess: () => {
       getQueryClient().invalidateQueries({
-        queryKey: userKeys.business(business._id),
+        queryKey: clientKeys.business(business._id),
       });
-      toast.success("User updated");
+      toast.success("Client updated");
       onOpenChange(false);
     },
     onError: (error: any) =>
-      toast.error("Couldn't update user. Try again.", {
+      toast.error("Couldn't update client. Try again.", {
         description:
           error instanceof Error || error instanceof ApiError
             ? error.message
@@ -85,23 +84,23 @@ export function UserFormSheet({
 
   const form = useAppForm({
     defaultValues: {
-      name: user?.name ?? "",
-      email: user?.email ?? "",
-      phone: user?.phone ?? "",
-      address: user?.address ?? "",
-      companyName: user?.companyName ?? "",
-      gstNumber: user?.gstNumber ?? "",
-      notes: user?.notes ?? "",
-      tags: user?.tags ?? [],
-    } as UserFormValues,
+      name: client?.name ?? "",
+      email: client?.email ?? "",
+      phone: client?.phone ?? "",
+      address: client?.address ?? "",
+      companyName: client?.companyName ?? "",
+      gstNumber: client?.gstNumber ?? "",
+      notes: client?.notes ?? "",
+      tags: client?.tags ?? [],
+    } as ClientFormValues,
     validators: {
-      onSubmit: userSchema,
+      onSubmit: clientSchema,
     },
     onSubmit: async ({ value }) => {
       if (isEdit) {
         await updateMutation.mutateAsync({
           businessId: business._id,
-          id: user._id,
+          id: client._id,
           values: value,
         });
       } else {
@@ -119,17 +118,17 @@ export function UserFormSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="flex flex-col">
         <SheetHeader>
-          <SheetTitle>{isEdit ? "Edit User" : "New User"}</SheetTitle>
+          <SheetTitle>{isEdit ? "Edit Client" : "New Client"}</SheetTitle>
           <SheetDescription>
             {isEdit
-              ? "Update the user details below."
-              : "Fill in the details to create a new user."}
+              ? "Update the client details below."
+              : "Fill in the details to create a new client."}
           </SheetDescription>
         </SheetHeader>
 
         <div className="flex-1 overflow-auto">
           <form
-            id="user-form-sheet"
+            id="client-form-sheet"
             className="space-y-4 p-4 md:p-4"
             onSubmit={(e) => {
               e.preventDefault();
@@ -228,9 +227,9 @@ export function UserFormSheet({
           <LoadingButton
             loading={isPending}
             type="submit"
-            form="user-form-sheet"
+            form="client-form-sheet"
           >
-            {isEdit ? "Update User" : "Create User"}
+            {isEdit ? "Update Client" : "Create Client"}
           </LoadingButton>
         </SheetFooter>
       </SheetContent>
@@ -238,7 +237,7 @@ export function UserFormSheet({
   );
 }
 
-export function UserFormSheetTrigger() {
+export function ClientFormSheetTrigger() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -246,7 +245,7 @@ export function UserFormSheetTrigger() {
       <Button onClick={() => setOpen(true)}>
         <Icons.add className="mr-2 h-4 w-4" /> Add Client
       </Button>
-      <UserFormSheet open={open} onOpenChange={setOpen} />
+      <ClientFormSheet open={open} onOpenChange={setOpen} />
     </>
   );
 }
