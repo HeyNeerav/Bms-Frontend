@@ -1,5 +1,9 @@
-'use client';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+"use client";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,8 +11,8 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -22,31 +26,36 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarRail
-} from '@/components/ui/sidebar';
-import { navGroups } from '@/config/nav-config';
-import { useFilteredNavGroups } from '@/hooks/use-nav';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { Icons } from '@/components/icons';
+  SidebarRail,
+} from "@/components/ui/sidebar";
+import { navGroups } from "@/config/nav-config";
+import { useFilteredNavGroups } from "@/hooks/use-nav";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { Icons } from "@/components/icons";
+import { useQuery } from "@tanstack/react-query";
+import { userMeQueryOptions } from "@/features/profile/api/queries";
+import { UserAvatarProfile } from "../user-avatar-profile";
 
 export default function AppSidebar({ slug }: { slug: string }) {
-
   const pathname = usePathname();
   const router = useRouter();
   const filteredGroups = useFilteredNavGroups(navGroups);
 
+  const { data } = useQuery(userMeQueryOptions());
+  const user = data?.data;
+
   return (
-    <Sidebar collapsible='icon'>
+    <Sidebar collapsible="icon">
       <SidebarHeader />
-      <SidebarContent className='overflow-x-hidden'>
+      <SidebarContent className="overflow-x-hidden">
         {filteredGroups.map((group) => (
-          <SidebarGroup key={group.label || 'ungrouped'} className='py-0'>
-            {group.label &&
-              <SidebarGroupLabel className='text-xs font-medium tracking-wide text-muted-foreground pt-4 mb-1 h-auto border-t border-sidebar-border mt-4 rounded-none px-2'>
+          <SidebarGroup key={group.label || "ungrouped"} className="py-0">
+            {group.label && (
+              <SidebarGroupLabel className="text-xs font-medium tracking-wide text-muted-foreground pt-4 mb-1 h-auto border-t border-sidebar-border mt-4 rounded-none px-2">
                 {group.label}
               </SidebarGroupLabel>
-            }
+            )}
             <SidebarMenu>
               {group.items.map((item) => {
                 const Icon = item.icon ? Icons[item.icon] : Icons.logo;
@@ -61,20 +70,25 @@ export default function AppSidebar({ slug }: { slug: string }) {
                         <SidebarMenuButton
                           tooltip={item.title}
                           isActive={pathname === `/${slug}${item.url}`}
-                          className='group/collapsible'
+                          className="group/collapsible"
                         />
                       }
                     >
                       {item.icon && <Icon />}
                       <span>{item.title}</span>
-                      <Icons.chevronRight className='ml-auto transition-transform duration-200 group-data-panel-open/collapsible:rotate-90' />
+                      <Icons.chevronRight className="ml-auto transition-transform duration-200 group-data-panel-open/collapsible:rotate-90" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <SidebarMenuSub>
                         {item.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton
-                              render={<Link href={`/${slug}${subItem.url}`} aria-label={subItem.title} />}
+                              render={
+                                <Link
+                                  href={`/${slug}${subItem.url}`}
+                                  aria-label={subItem.title}
+                                />
+                              }
                               isActive={pathname === `/${slug}${subItem.url}`}
                             >
                               <span>{subItem.title}</span>
@@ -87,7 +101,12 @@ export default function AppSidebar({ slug }: { slug: string }) {
                 ) : (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      render={<Link href={`/${slug}${item.url}`} aria-label={item.title} />}
+                      render={
+                        <Link
+                          href={`/${slug}${item.url}`}
+                          aria-label={item.title}
+                        />
+                      }
                       tooltip={item.title}
                       isActive={pathname === `/${slug}${item.url}`}
                     >
@@ -101,46 +120,68 @@ export default function AppSidebar({ slug }: { slug: string }) {
           </SidebarGroup>
         ))}
       </SidebarContent>
-      {/* <SidebarFooter>
+      <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={
                   <SidebarMenuButton
-                    size='lg'
-                    className='data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground'
+                    size="lg"
+                    className="data-popup-open:bg-sidebar-accent data-popup-open:text-sidebar-accent-foreground"
                   />
                 }
               >
-                <span className='truncate'>Account</span>
-                <Icons.chevronsDown className='ml-auto size-4' />
+                {user && (
+                  <UserAvatarProfile
+                    className="h-8 w-8 rounded-lg"
+                    showInfo
+                    user={user}
+                  />
+                )}
+                <Icons.chevronsDown className="ml-auto size-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className='w-(--anchor-width) min-w-56 rounded-lg'
-                side='bottom'
-                align='end'
+                className="w-(--anchor-width) min-w-56 rounded-lg"
+                side="bottom"
+                align="end"
                 sideOffset={4}
               >
                 <DropdownMenuGroup>
-                  <DropdownMenuLabel className='p-0 font-normal'>
-                    <div className='text-muted-foreground px-1 py-1.5 text-sm'>
-                      Sign in to manage your account
+                  <DropdownMenuLabel className="p-0 font-normal">
+                    <div className="px-1 py-1.5">
+                      {user && (
+                        <UserAvatarProfile
+                          className="h-8 w-8 rounded-lg"
+                          showInfo
+                          user={user}
+                        />
+                      )}
                     </div>
                   </DropdownMenuLabel>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
+
                 <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={() => router.push('/dashboard/notifications')}>
-                    <Icons.notification className='mr-2 h-4 w-4' />
-                    Notifications
+                  <DropdownMenuItem
+                    onClick={() => router.push("/dashboard/profile")}
+                  >
+                    <Icons.account className="mr-2 h-4 w-4" />
+                    Profile
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <Icons.logout aria-hidden className="mr-2 h-4 w-4" />
+                    Sign out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarFooter> */}
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
