@@ -1,6 +1,4 @@
-// export type { Member } from '@/constants/mock-api-users';
-
-export const MemberRole = "OWNER" | "ADMIN" | "EMPLOYEE";
+export type MemberRole = "OWNER" | "ADMIN" | "EMPLOYEE";
 
 export type Member = {
   _id: string;
