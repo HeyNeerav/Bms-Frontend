@@ -1,89 +1,135 @@
-'use client';
+"use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
-} from '@/components/ui/chart';
-import { Badge } from '@/components/ui/badge';
-import { Icons } from '@/components/icons';
-import React from 'react';
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Badge } from "@/components/ui/badge";
+import { Icons } from "@/components/icons";
+import { formatPrice } from "@/lib/format";
+import type { Analytics } from "@/features/overview/api/types";
 
-const chartData = [
-  { month: 'January', desktop: 342, mobile: 245 },
-  { month: 'February', desktop: 876, mobile: 654 },
-  { month: 'March', desktop: 512, mobile: 387 },
-  { month: 'April', desktop: 629, mobile: 521 },
-  { month: 'May', desktop: 458, mobile: 412 },
-  { month: 'June', desktop: 781, mobile: 598 },
-  { month: 'July', desktop: 394, mobile: 312 },
-  { month: 'August', desktop: 925, mobile: 743 },
-  { month: 'September', desktop: 647, mobile: 489 },
-  { month: 'October', desktop: 532, mobile: 476 },
-  { month: 'November', desktop: 803, mobile: 687 },
-  { month: 'December', desktop: 271, mobile: 198 }
-];
+interface AreaGraphProps {
+  revenueTrend: Analytics["revenueTrend"];
+  revenueChange: Analytics["overview"]["revenueChange"];
+  period: Analytics["period"];
+}
 
 const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: 'var(--chart-1)'
+  revenue: {
+    label: "Revenue",
+    color: "var(--chart-1)",
   },
-  mobile: {
-    label: 'Mobile',
-    color: 'var(--chart-2)'
-  }
 } satisfies ChartConfig;
 
-export function AreaGraph() {
+const formatDate = (value: string) => {
+  const date = new Date(
+    /^\d{4}-\d{2}$/.test(value)
+      ? `${value}-01T00:00:00Z`
+      : `${value}T00:00:00Z`,
+  );
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    ...(value.length > 7 ? { day: "numeric" as const } : {}),
+    ...(value.length === 4 ? { year: "numeric" as const } : {}),
+    timeZone: "UTC",
+  }).format(date);
+};
+
+export function AreaGraph({
+  revenueTrend,
+  revenueChange,
+  period,
+}: AreaGraphProps) {
+  const isLifetime = revenueChange === null;
+  const isIncreasing = (revenueChange ?? 0) > 0;
+  const isDecreasing = (revenueChange ?? 0) < 0;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          Dotted Area Chart
-          <Badge variant='outline'>
-            <Icons.trendingUp />
-            -5.2%
-          </Badge>
+        <CardTitle className="flex items-center gap-2">
+          Revenue Trend
+          {isLifetime ? (
+            <Badge variant="outline">Lifetime</Badge>
+          ) : (
+            <Badge variant="outline">
+              {isIncreasing ? (
+                <Icons.trendingUp />
+              ) : isDecreasing ? (
+                <Icons.trendingDown />
+              ) : null}
+              {revenueChange! > 0 ? "+" : ""}
+              {revenueChange}%
+            </Badge>
+          )}
         </CardTitle>
-        <CardDescription>Showing total visitors for the last 6 months</CardDescription>
+
+        <CardDescription>
+          Revenue from successful payments over the last {period}
+        </CardDescription>
       </CardHeader>
+
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} strokeDasharray='3 3' />
-            <XAxis
-              dataKey='month'
+          <AreaChart accessibilityLayer data={revenueTrend}>
+            <CartesianGrid vertical={false} strokeDasharray="3 3" />
+            <YAxis
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              width={80}
+              tickFormatter={(value) =>
+                new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  notation: "compact",
+                  maximumFractionDigits: 1,
+                }).format(value)
+              }
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={formatDate}
+            />
+
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(value) => formatDate(String(value))}
+                  formatter={(value) => formatPrice(Number(value))}
+                />
+              }
+            />
+
             <defs>
               <DottedBackgroundPattern config={chartConfig} />
             </defs>
+
             <Area
-              dataKey='mobile'
-              type='natural'
-              fill='url(#dotted-background-pattern-mobile)'
+              dataKey="revenue"
+              type="natural"
+              fill="url(#dotted-background-pattern-revenue)"
               fillOpacity={0.4}
-              stroke='var(--color-mobile)'
-              stackId='a'
-              strokeWidth={0.8}
-            />
-            <Area
-              dataKey='desktop'
-              type='natural'
-              fill='url(#dotted-background-pattern-desktop)'
-              fillOpacity={0.4}
-              stroke='var(--color-desktop)'
-              stackId='a'
-              strokeWidth={0.8}
+              stroke="var(--color-revenue)"
+              strokeWidth={1.5}
+              activeDot={{ r: 4 }}
             />
           </AreaChart>
         </ChartContainer>
@@ -93,22 +139,24 @@ export function AreaGraph() {
 }
 
 const DottedBackgroundPattern = ({ config }: { config: ChartConfig }) => {
-  const items = Object.fromEntries(
-    Object.entries(config).map(([key, value]) => [key, value.color])
-  );
+  const items = Object.entries(config).map(([key, value]) => ({
+    key,
+    color: value.color,
+  }));
+
   return (
     <>
-      {Object.entries(items).map(([key, value]) => (
+      {items.map(({ key, color }) => (
         <pattern
           key={key}
           id={`dotted-background-pattern-${key}`}
-          x='0'
-          y='0'
-          width='7'
-          height='7'
-          patternUnits='userSpaceOnUse'
+          x="0"
+          y="0"
+          width="7"
+          height="7"
+          patternUnits="userSpaceOnUse"
         >
-          <circle cx='5' cy='5' r='1.5' fill={value} opacity={0.5}></circle>
+          <circle cx="5" cy="5" r="1.5" fill={color} opacity={0.5} />
         </pattern>
       ))}
     </>
