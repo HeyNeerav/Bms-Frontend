@@ -10,6 +10,13 @@ export interface GetApiResponse<T> {
   }
 }
 
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+
 export interface PermissionCheck {
   permission?: string;
   plan?: string;
