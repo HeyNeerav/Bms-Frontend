@@ -10,6 +10,7 @@ import { getSortingStateParser } from '@/lib/data-table-parsers';
 export const searchParams = {
   page: parseAsInteger.withDefault(1),
   perPage: parseAsInteger.withDefault(10),
+  search: parseAsString,
   name: parseAsString,
   gender: parseAsString,
   category: parseAsString,
