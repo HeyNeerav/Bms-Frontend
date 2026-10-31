@@ -14,14 +14,24 @@ interface FetchOptions extends RequestInit {
   token?: string;
   businessId?: string;
   req?: Request;
-  onResponse?: (response: Response) => void;
+  resType?: "json" | "blob";
+  onResponse?: (res: Response) => void;
 }
 
 export async function fetchWrapper<T>(
   endpoint: string,
   options: FetchOptions = {},
 ): Promise<T> {
-  const { token, businessId, headers = {}, req, onResponse, body, ...customConfig } = options;
+  const {
+    token,
+    businessId,
+    headers = {},
+    req,
+    resType,
+    onResponse,
+    body,
+    ...customConfig
+  } = options;
 
   const isFormData = body instanceof FormData;
 
@@ -29,7 +39,6 @@ export async function fetchWrapper<T>(
     ...(!isFormData ? { "Content-Type": "application/json" } : {}),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
-
 
   if (req) {
     const authHeader = req.headers.get("Authorization");
@@ -53,25 +62,26 @@ export async function fetchWrapper<T>(
     credentials: "include",
   };
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, config);
+  const res = await fetch(`${BASE_URL}${endpoint}`, config);
 
-  onResponse?.(response);
+  onResponse?.(res);
 
-  if (!response.ok) {
-    const errorBody = await response.json().catch(() => null);
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
 
-    throw new ApiError(
-      response.status,
-      errorBody?.message || response.statusText,
-    );
+    throw new ApiError(res.status, errorBody?.message || res.statusText);
   }
 
-  if (response.status === 204) return {} as T;
-  return response.json();
+  if (res.status === 204) return {} as T;
+  if (resType === "blob") {
+    return res.blob() as unknown as T;
+  }
+
+  return res.json();
 }
 
 function serializeBody(body: unknown): BodyInit {
-  return body instanceof FormData ? body : JSON.stringify(body) ?? "";
+  return body instanceof FormData ? body : (JSON.stringify(body) ?? "");
 }
 
 export const api = {
