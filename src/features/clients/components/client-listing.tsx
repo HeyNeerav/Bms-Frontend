@@ -11,7 +11,7 @@ export default function ClientListingPage({
 }) {
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("name");
-  const pageLimit = searchParamsCache.get("perPage");
+  const pageLimit = searchParamsCache.get("limit");
   const roles = searchParamsCache.get("role");
   const sort = searchParamsCache.get("sort");
 
