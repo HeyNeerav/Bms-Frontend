@@ -11,7 +11,7 @@ export default async function BusinessesLayout({
   const accessToken = cookieStore.get("accessToken")?.value;
 
   if (!accessToken) {
-    redirect("/login");
+    redirect("/auth/sign-in");
   }
 
   try {
