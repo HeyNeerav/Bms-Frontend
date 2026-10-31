@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Bell, ChevronDown } from "lucide-react";
 
@@ -5,12 +7,27 @@ import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "@/components/themes/theme-selector";
 import { ThemeModeToggle } from "@/components/themes/theme-mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { userMeQueryOptions } from "@/features/profile/api/queries";
 
-export default async function BusinessesLayout({
+export default function BusinessesLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { data } = useQuery(userMeQueryOptions());
+
+  const user = data?.data;
+
+  const avatarFallbackText = () => {
+    if (!user?.name) return "U";
+    const parts = user.name.trim().split(/\s+/);
+    if (parts.length > 1) {
+      return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+    }
+    return parts[0].charAt(0).toUpperCase();
+  }
+
   return (
     <main className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="h-16 shrink-0 border-b border-border bg-background/90">
@@ -38,12 +55,14 @@ export default async function BusinessesLayout({
             <div className="flex items-center gap-3 text-sm font-medium">
               <Avatar className="size-8">
                 <AvatarImage
-                  src="https://i.pravatar.cc/80?img=47"
-                  alt="Sarah Johnson"
+                  src={user?.avatar?.url || ""}
+                  alt={user?.name || "User Avatar"}
                 />
-                <AvatarFallback>SJ</AvatarFallback>
+                <AvatarFallback>
+                  {avatarFallbackText()}
+                </AvatarFallback>
               </Avatar>
-              <span className="hidden sm:inline">Sarah Johnson</span>
+              <span className="hidden sm:inline">{user?.name}</span>
               <ChevronDown className="size-4 text-muted-foreground" />
             </div>
           </div>
