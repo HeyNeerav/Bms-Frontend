@@ -9,9 +9,5 @@ export async function getAnalytics(businessId: string, period: string) {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
-  const res = await api.get<ApiResponse<Analytics>>(`/analytics?period=${period}`, { token, businessId });
-
-  console.dir(res.data, { depth: null, colors: true });
-
-  return res;
+  return await api.get<ApiResponse<Analytics>>(`/analytics?period=${period}`, { token, businessId });
 }
