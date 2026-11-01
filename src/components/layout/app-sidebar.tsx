@@ -27,6 +27,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { navGroups } from "@/config/nav-config";
 import { useFilteredNavGroups } from "@/hooks/use-nav";
@@ -36,6 +37,7 @@ import { Icons } from "@/components/icons";
 import { useQuery } from "@tanstack/react-query";
 import { userMeQueryOptions } from "@/features/user/api/queries";
 import { UserAvatarProfile } from "../user-avatar-profile";
+import { cn } from "@/lib/utils";
 
 export default function AppSidebar({ slug }: { slug: string }) {
   const pathname = usePathname();
@@ -45,14 +47,28 @@ export default function AppSidebar({ slug }: { slug: string }) {
   const { data } = useQuery(userMeQueryOptions());
   const user = data?.data;
 
+  const { state } = useSidebar();
+
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader />
+      <SidebarHeader className="pt-4">
+        <Link href="/businesses" className="flex items-center gap-3">
+          <img src="/logo.webp" alt="BMS Logo" className="size-8" />
+          <div className="flex flex-col">
+            <span className={`${state === "collapsed" && "hidden"} text-lg font-semibold tracking-tight`}>BMS</span>
+            <span className={`${state === "collapsed" && "hidden"} text-xs font-medium tracking-wide text-muted-foreground`}>Business Management System</span>
+          </div>
+        </Link>
+      </SidebarHeader>
       <SidebarContent className="overflow-x-hidden">
         {filteredGroups.map((group) => (
           <SidebarGroup key={group.label || "ungrouped"} className="py-0">
             {group.label && (
-              <SidebarGroupLabel className="text-xs font-medium tracking-wide text-muted-foreground pt-4 mb-1 h-auto border-t border-sidebar-border mt-4 rounded-none px-2">
+              <SidebarGroupLabel
+                className={cn(
+                  "text-xs font-medium tracking-wide text-muted-foreground pt-4 mb-1 h-auto mt-4 rounded-none px-2",
+                )}
+              >
                 {group.label}
               </SidebarGroupLabel>
             )}
@@ -103,7 +119,11 @@ export default function AppSidebar({ slug }: { slug: string }) {
                     <SidebarMenuButton
                       render={
                         <Link
-                          href={`/${slug}${item.url}`}
+                          href={
+                            group.label === "General"
+                              ? `${item.url}`
+                              : `/${slug}${item.url}`
+                          }
                           aria-label={item.title}
                         />
                       }
@@ -171,7 +191,7 @@ export default function AppSidebar({ slug }: { slug: string }) {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    onClick={() => router.push("/api/auth/logout")}
+                    onClick={() => window.location.href = "/api/auth/logout"}
                   >
                     <Icons.logout aria-hidden className="mr-2 h-4 w-4" />
                     Sign out

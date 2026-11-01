@@ -35,6 +35,25 @@ import { NavGroup } from '@/types';
  */
 export const navGroups: NavGroup[] = [
   {
+    label: "General",
+    items: [
+      {
+        title: "Businesses",
+        url: "/businesses",
+        icon: "workspace",
+        isActive: false,
+        items: [],
+      },
+      {
+        title: "My Profile",
+        url: "/profile",
+        icon: "user",
+        isActive: false,
+        items: [],
+      },
+    ],
+  },
+  {
     label: 'Overview',
     items: [
       {
@@ -64,7 +83,7 @@ export const navGroups: NavGroup[] = [
       {
         title: 'Invoices',
         url: '/invoices',
-        icon: 'teams',
+        icon: 'fileTypePdf',
         shortcut: ['i', 'i'],
         isActive: false,
         items: []
