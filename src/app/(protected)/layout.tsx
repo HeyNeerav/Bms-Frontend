@@ -22,7 +22,7 @@ export default async function BusinessesLayout({
   try {
     await queryClient.query({ ...userMeQueryOptions(), staleTime: "static" });
   } catch (error) {
-    if (error instanceof ApiError && error.status === 401) {
+    if (error instanceof Error || error instanceof ApiError && error.status === 401) {
       redirect("/api/auth/clear-session");
     }
   }
