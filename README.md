@@ -1,68 +1,92 @@
 # Business Management System — Frontend
 
-> 🚧 This project is a work in progress. Some features may be incomplete or change as development continues.
+> 🧪 **Testing Phase:** The core features of this project have been implemented. The application is currently undergoing testing, bug fixing, and refinement. Some functionality may still change as issues are identified and resolved.
 
-The frontend for the Business Management System (BMS), a web application for managing business operations such as clients, products, invoices, and payments.
+The frontend for the **Business Management System (BMS)**, a web application designed to simplify business operations such as client management, product and service management, invoicing, and payments.
 
-Built with Next.js and TypeScript, the application provides a dashboard for managing business data and communicating with the BMS backend.
+Built with **Next.js and TypeScript**, BMS provides a responsive dashboard for managing business operations, tracking financial performance, and interacting with the BMS backend.
 
-**Backend repository:** [Business Management System — Backend](https://github.com/NHeroOP/Business-Management-System-Backend)
+**Backend Repository:** [Business Management System — Backend](https://github.com/NHeroOP/Business-Management-System-Backend)
 
 ## Screenshots
 
-### Home
-
-![Home](public/showcase/home.png)
-
-### Create Business
-
-![Create Business](public/showcase/create-business.png)
-
-### Dashboard
-
+### Dashboard (Image extended to show the full page)
 ![Dashboard](public/showcase/dashboard.png)
 
 ### Clients
-
 ![Clients](public/showcase/clients.png)
 
 ### Product Create Form
+![Product Create Form](public/showcase/create-product.png)
 
-![Product Create Form](public/showcase/products.png)
+### Home
+![Home](public/showcase/home.png)
+
+### Invoice PDF
+![Invoice PDF](public/showcase/invoice-pdf.png)
 
 ## Features
 
-- Business dashboard
-- Client management
-- Product and service management
-- Invoice creation and management
-- Invoice item and quantity management
-- Search and pagination
-- Form validation
-- Business-specific data and navigation
-- Reusable form components
-- Responsive dashboard layout
-- API integration with the backend
+### Business Management
+- Create and manage businesses.
+- Business-specific dashboards and navigation.
+- Switch between businesses.
+- Business-scoped data and operations.
+
+### Dashboard & Analytics
+- Business overview with key performance indicators.
+- Revenue tracking and period-based comparisons.
+- Revenue trend visualization.
+- Invoice statistics and payment summaries.
+- Outstanding balance and overdue invoice tracking.
+- Top clients and products.
+- Recent sales activity.
+- Analytics filtering by date range.
+
+### Core Business Operations
+- Client management.
+- Product and service management.
+- Invoice creation and management.
+- Invoice item and quantity management.
+- Payment tracking.
+- Search and pagination.
+
+### Account & Profile
+- Profile management.
+- Profile information updates.
+- Profile avatar management.
+- Account security and verification information.
+
+### General
+- Responsive dashboard layout.
+- Reusable UI and form components.
+- Form validation.
+- Notifications and feedback.
+- Backend API integration.
+- Business-specific data handling.
 
 ## Tech Stack
 
-- **Framework:** Next.js 16
-- **Language:** TypeScript
-- **UI:** React and shadcn/ui
-- **Styling:** Tailwind CSS v4
-- **Data Fetching:** TanStack Query
-- **Forms:** TanStack Form
-- **Validation:** Zod
-- **Notifications:** Sonner
-- **Package Manager:** bun
+| Category | Technology |
+|---|---|
+| Framework | [Next.js 16](https://nextjs.org/) |
+| UI Components | [shadcn/ui](https://ui.shadcn.com/) |
+| Data Fetching & Caching | [TanStack Query](https://tanstack.com/query) |
+| Tables | [TanStack Table](https://tanstack.com/table) |
+| Forms | [TanStack Form](https://tanstack.com/form) |
+| Validation | [Zod](https://zod.dev/) |
+| URL State Management | [nuqs](https://nuqs.dev/) |
+| Package Manager | [Bun](https://bun.sh/) |
 
 ## Getting Started
 
-### Requirements
+### Prerequisites
 
-- Node.js
-- bun
-- A running BMS backend
+Make sure you have the following installed:
+
+- [Node.js](https://nodejs.org/)
+- [bun](https://bun.sh/)
+- A running instance of the [BMS backend](https://github.com/NHeroOP/Business-Management-System-Backend)
 
 ### Installation
 
@@ -70,21 +94,25 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/HeyNeerav/Bms-Frontend.git
+
 cd Bms-Frontend
 ```
 
-Install the dependencies:
+Install dependencies:
 
 ```bash
 bun install
 ```
 
 ### Environment Setup
-Create a `.env` file in the root directory and add the following environment variables:
 
-```bash
+Create a `.env` file in the project root:
+
+```env
 BACKEND_API_URL=your_backend_api_url
 ```
+
+Replace `your_backend_api_url` with the URL of your running BMS backend.
 
 ### Development
 
@@ -98,10 +126,18 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Backend
 
-The frontend communicates with the BMS backend for authentication, business data, clients, products, invoices, and other operations.
+The frontend communicates with the BMS backend for authentication and business operations, including business management, clients, products, services, invoices, and payments.
 
-**[View the backend repository](https://github.com/NHeroOP/Business-Management-System-Backend)**
+**[View the Backend Repository](https://github.com/NHeroOP/Business-Management-System-Backend)**
+
+## Acknowledgements
+
+The dashboard UI is based on [Next Shadcn Dashboard Starter](https://github.com/Kiranism/next-shadcn-dashboard-starter) by [Kiranism](https://github.com/Kiranism).
+
+The starter provided the initial dashboard foundation, which has been adapted and extended to support the Business Management System's features and workflows.
 
 ## License
 
-This project is available under the license specified in the repository's `LICENSE` file.
+This project uses the MIT License. The original dashboard template is Copyright (c) 2023 Kiranism.
+
+See the [LICENSE](./LICENSE) file for the full license and copyright notice.
