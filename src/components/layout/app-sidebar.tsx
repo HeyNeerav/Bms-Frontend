@@ -34,7 +34,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Icons } from "@/components/icons";
 import { useQuery } from "@tanstack/react-query";
-import { userMeQueryOptions } from "@/features/profile/api/queries";
+import { userMeQueryOptions } from "@/features/user/api/queries";
 import { UserAvatarProfile } from "../user-avatar-profile";
 
 export default function AppSidebar({ slug }: { slug: string }) {

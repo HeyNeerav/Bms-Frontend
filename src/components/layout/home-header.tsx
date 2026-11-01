@@ -1,14 +1,14 @@
 "use client";
 
-import Link from 'next/link'
-import React from 'react'
-import { ThemeModeToggle } from '../themes/theme-mode-toggle'
-import { ThemeSelector } from '../themes/theme-selector'
-import { Bell, ChevronDown } from 'lucide-react'
-import { Button } from '../ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { userMeQueryOptions } from '@/features/profile/api/queries';
-import { useQuery } from '@tanstack/react-query';
+import Link from "next/link";
+import React from "react";
+import { ThemeModeToggle } from "../themes/theme-mode-toggle";
+import { ThemeSelector } from "../themes/theme-selector";
+import { Bell, ChevronDown } from "lucide-react";
+import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { userMeQueryOptions } from "@/features/user/api/queries";
+import { useQuery } from "@tanstack/react-query";
 
 export default function HomeHeader() {
   const { data } = useQuery(userMeQueryOptions());
@@ -22,7 +22,7 @@ export default function HomeHeader() {
       return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
     }
     return parts[0].charAt(0).toUpperCase();
-  }
+  };
 
   return (
     <header className="h-16 shrink-0 border-b border-border bg-background/90">
@@ -53,9 +53,7 @@ export default function HomeHeader() {
                 src={user?.avatar?.url || ""}
                 alt={user?.name || "User Avatar"}
               />
-              <AvatarFallback>
-                {avatarFallbackText()}
-              </AvatarFallback>
+              <AvatarFallback>{avatarFallbackText()}</AvatarFallback>
             </Avatar>
             <span className="hidden sm:inline">{user?.name}</span>
             <ChevronDown className="size-4 text-muted-foreground" />
@@ -63,5 +61,5 @@ export default function HomeHeader() {
         </div>
       </div>
     </header>
-  )
+  );
 }
