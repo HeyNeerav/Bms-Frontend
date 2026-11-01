@@ -19,6 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -26,28 +27,33 @@ import { Icons } from "@/components/icons";
 import { useQuery } from "@tanstack/react-query";
 import { userMeQueryOptions } from "@/features/user/api/queries";
 import { UserAvatarProfile } from "../user-avatar-profile";
+import { NavGroup } from "@/types";
 
 export default function HomeSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const generalNavGroups = [
+  const generalNavGroups: NavGroup[] = [
     {
-      label: "GENERAL",
+      label: "General",
       items: [
         {
           title: "Businesses",
           url: "/businesses",
-          icon: "briefcase",
+          icon: "workspace",
+          isActive: false,
+          items: [],
         },
       ],
     },
     {
-      label: "ACCOUNT",
+      label: "Account",
       items: [
         {
           title: "My Profile",
           url: "/profile",
           icon: "user",
+          isActive: false,
+          items: [],
         },
       ],
     },
@@ -56,9 +62,19 @@ export default function HomeSidebar() {
   const { data } = useQuery(userMeQueryOptions());
   const user = data?.data;
 
+  const { state } = useSidebar();
+
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader />
+      <SidebarHeader className="pt-4">
+        <Link href="/businesses" className="flex items-center gap-3">
+          <img src="/logo.webp" alt="BMS Logo" className="size-8" />
+          <div className="flex flex-col">
+            <span className={`${state === "collapsed" && "hidden"} text-lg font-semibold tracking-tight`}>BMS</span>
+            <span className={`${state === "collapsed" && "hidden"} text-xs font-medium tracking-wide text-muted-foreground`}>Business Management System</span>
+          </div>
+        </Link>
+      </SidebarHeader>
       <SidebarContent className="overflow-x-hidden">
         {generalNavGroups.map((group) => (
           <SidebarGroup key={group.label || "ungrouped"} className="py-0">
@@ -69,9 +85,7 @@ export default function HomeSidebar() {
             )}
             <SidebarMenu>
               {group.items.map((item) => {
-                const Icon = item.icon
-                  ? Icons[item.icon as keyof typeof Icons]
-                  : Icons.logo;
+                const Icon = item.icon ? Icons[item.icon] : Icons.logo;
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
@@ -81,7 +95,7 @@ export default function HomeSidebar() {
                       tooltip={item.title}
                       isActive={pathname === `${item.url}`}
                     >
-                      {/* <Icon /> */}
+                      {item.icon && <Icon />}
                       <span>{item.title}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -141,9 +155,7 @@ export default function HomeSidebar() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    onClick={() => router.push("/api/auth/logout")}
-                  >
+                  <DropdownMenuItem onClick={() => window.location.href = "/api/auth/logout"}>
                     <Icons.logout aria-hidden className="mr-2 h-4 w-4" />
                     Sign out
                   </DropdownMenuItem>

@@ -1,32 +1,26 @@
 "use client";
 
-import Link from "next/link";
-import React from "react";
-import { ThemeModeToggle } from "../themes/theme-mode-toggle";
-import { ThemeSelector } from "../themes/theme-selector";
-import { Bell, ChevronDown } from "lucide-react";
-import { Button } from "../ui/button";
-import { userMeQueryOptions } from "@/features/user/api/queries";
-import { useQuery } from "@tanstack/react-query";
+import { SidebarTrigger } from '../ui/sidebar';
+import { Separator } from '../ui/separator';
+import { Breadcrumbs } from '../breadcrumbs';
+import { ThemeSelector } from '../themes/theme-selector';
+import { ThemeModeToggle } from '../themes/theme-mode-toggle';
+import CtaGithub from './cta-github';
 
 export default function HomeHeader() {
-  const { data } = useQuery(userMeQueryOptions());
-  const user = data?.data;
-
   return (
-    <header className="h-16 shrink-0 border-b border-border bg-background/90">
-      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between px-6 lg:px-20">
-        <Link href="/businesses" className="flex items-center gap-3">
-          <div className="grid size-8 place-items-center text-primary">
-            <img src="/logo.webp" alt="BMS Logo" className="size-7" />
-          </div>
-          <span className="text-lg font-semibold tracking-tight">BMS</span>
-        </Link>
-        <div className="flex items-center gap-5">
-          <ThemeModeToggle />
-          <div className="hidden sm:block">
-            <ThemeSelector />
-          </div>
+    <header className='bg-background/60 sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-2 backdrop-blur-md md:h-14'>
+      <div className='flex items-center gap-2 px-4'>
+        <SidebarTrigger className='-ml-1' />
+        <Separator orientation='vertical' className='mr-2 h-4 data-vertical:self-center' />
+        <Breadcrumbs />
+      </div>
+
+      <div className='flex items-center gap-2 px-4'>
+        <CtaGithub />
+        <ThemeModeToggle />
+        <div className='hidden sm:block'>
+          <ThemeSelector />
         </div>
       </div>
     </header>
