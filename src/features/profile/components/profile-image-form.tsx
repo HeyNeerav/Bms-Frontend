@@ -23,7 +23,7 @@ export function ProfileImageForm({ initialData }: { initialData: User }) {
     onSuccess: () => {
       toast.success("Profile picture updated");
       queryClient.invalidateQueries({
-        queryKey: userKeys.all,
+        queryKey: userKeys.me(),
       });
     },
     onError: (error: any) => {

@@ -22,7 +22,7 @@ export function ProfileForm({ initialData }: { initialData: User }) {
     ...updateProfileMutation,
     onSuccess: () => {
       toast.success("Profile updated successfully");
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
+      queryClient.invalidateQueries({ queryKey: userKeys.me() });
     },
     onError: (error: any) => {
       toast.error("Couldn't update profile", {

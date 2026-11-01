@@ -2,11 +2,12 @@ import { queryOptions } from "@tanstack/react-query";
 import { getProfile } from "./service";
 
 export const userKeys = {
-  all: ["user", "me"] as const,
+  all: ["user"] as const,
+  me: () => [...userKeys.all, "me"] as const,
 };
 
 export const userMeQueryOptions = () =>
   queryOptions({
-    queryKey: userKeys.all,
+    queryKey: userKeys.me(),
     queryFn: () => getProfile(),
   });
