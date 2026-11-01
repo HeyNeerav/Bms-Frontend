@@ -13,7 +13,10 @@ export async function getProfile() {
 }
 
 export async function updateProfile(name: string) {
-  //
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  return await api.patch<ApiResponse<User>>("/me", { name }, { token });
 }
 
 export async function updateAvatar(imageUrl: File | null) {

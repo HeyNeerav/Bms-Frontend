@@ -10,7 +10,7 @@ const ACCEPTED_IMAGE_TYPES = [
 
 
 export const nameSchema = z.object({
-  name: z.string().min(3, { message: 'Name must be at least 3 characters' }),
+  name: z.string().min(4, { message: 'Name must be at least 4 characters' }),
 })
 
 export type NameFormValues = z.infer<typeof nameSchema>;
