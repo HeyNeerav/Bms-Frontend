@@ -1,5 +1,10 @@
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
-export default async function Dashboard() {
-  redirect('/businesses');
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export default async function Dashboard({ params }: PageProps) {
+  const { slug } = await params;
+  redirect(`/${slug}/overview`);
 }

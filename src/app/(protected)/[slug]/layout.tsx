@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { getBusinessBySlug } from "@/lib/businesses";
 
@@ -22,7 +22,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default async function DashboardLayout({
   children,
   params,
@@ -32,11 +31,6 @@ export default async function DashboardLayout({
 }) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
-  const token = cookieStore.get("accessToken")?.value;
-
-  if (!token) {
-    redirect("/login");
-  }
 
   const { slug } = await params;
 
@@ -44,7 +38,7 @@ export default async function DashboardLayout({
   try {
     business = await getBusinessBySlug(slug);
   } catch (error) {
-    console.error("Error fetching businesses:", error);
+    business = null;
   }
 
   if (!business) notFound();
