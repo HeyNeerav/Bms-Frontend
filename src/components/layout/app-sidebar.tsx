@@ -163,16 +163,16 @@ export default function AppSidebar({ slug }: { slug: string }) {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    onClick={() => router.push("/profile")}
-                  >
+                  <DropdownMenuItem onClick={() => router.push("/profile")}>
                     <Icons.account className="mr-2 h-4 w-4" />
                     Profile
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => router.push("/api/auth/logout")}
+                  >
                     <Icons.logout aria-hidden className="mr-2 h-4 w-4" />
                     Sign out
                   </DropdownMenuItem>
