@@ -1,7 +1,32 @@
-import { z } from "zod";
+import * as z from 'zod';
 
-export const profileSchema = z.object({
-  name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
-});
+const MAX_FILE_SIZE = 5_000_000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
-export type ProfileFormValues = z.infer<typeof profileSchema>;
+
+export const nameSchema = z.object({
+  name: z.string().min(3, { message: 'Name must be at least 3 characters' }),
+})
+
+export type NameFormValues = z.infer<typeof nameSchema>;
+
+export const profileImageSchema = z.object({
+  imageUrl: z
+    .any()
+    .refine((files) => files?.length == 1, "Image is required.")
+    .refine(
+      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+      "Max file size is 5MB."
+    )
+    .refine(
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+      ".jpg, .jpeg, .png and .webp files are accepted."
+    ),
+})
+
+export type ProfileImageFormValues = z.infer<typeof profileImageSchema>;

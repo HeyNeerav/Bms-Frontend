@@ -28,7 +28,7 @@ export function UserAvatarProfile({
   return (
     <div className="flex items-center gap-2">
       <Avatar className={className}>
-        <AvatarImage src={user?.imageUrl || ""} alt={user?.name || ""} />
+        <AvatarImage src={user?.avatar?.url || ""} alt={user?.name || ""} />
         <AvatarFallback className="rounded-lg">
           {avatarFallbackText()}
         </AvatarFallback>
