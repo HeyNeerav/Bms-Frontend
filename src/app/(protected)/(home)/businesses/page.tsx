@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 type Business = {
   _id: string;
@@ -27,10 +28,7 @@ function BusinessCard({ business }: { business: Business }) {
   const router = useRouter();
 
   return (
-    <Card
-      onClick={() => router.push(`/${business.slug}/overview`)}
-      className="rounded-xl border-border/80 bg-card/85 shadow-none transition hover:-translate-y-0.5 hover:shadow-md"
-    >
+    <Card className="rounded-xl border-border/80 bg-card/85 shadow-none transition hover:-translate-y-0.5 hover:shadow-md">
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
           <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
@@ -73,9 +71,8 @@ export default function Page() {
       try {
         const res: { data: Business[] } = await apiClient.get("/businesses");
         setBusinesses(res.data);
-        
       } catch (error) {
-        setBusinesses([]); 
+        setBusinesses([]);
       }
     };
 
@@ -143,7 +140,9 @@ export default function Page() {
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
           {filteredBusinesses.map((business) => (
-            <BusinessCard key={business.slug} business={business} />
+            <Link href={`/${business.slug}`} key={business.slug}>
+              <BusinessCard key={business.slug} business={business} />
+            </Link>
           ))}
         </div>
         {filteredBusinesses.length === 0 && (
@@ -156,12 +155,11 @@ export default function Page() {
               <p className="mt-1 max-w-[220px] text-sm leading-5 text-muted-foreground">
                 Set up a new business and start managing it with your team.
               </p>
-              <Button
-                onClick={() => router.push("/businesses/create")}
-                className="mt-3 rounded-xl bg-primary px-6 hover:bg-primary/90"
-              >
-                Create Business
-              </Button>
+              <Link href="/businesses/create">
+                <Button className="mt-3 rounded-xl bg-primary px-6 hover:bg-primary/90">
+                  Create Business
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         )}

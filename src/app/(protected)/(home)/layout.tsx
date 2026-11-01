@@ -1,29 +1,18 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { notFound, redirect } from "next/navigation";
 
-import { getBusinessBySlug } from "@/lib/businesses";
-
-import KBar from "@/components/kbar";
-import Header from "@/components/layout/header";
-import AppSidebar from "@/components/layout/app-sidebar";
-import { InfoSidebar } from "@/components/layout/info-sidebar";
-
-import { InfobarProvider } from "@/components/ui/infobar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { BusinessProvider } from "@/components/business-provider";
 import HomeSidebar from "@/components/layout/home-sidebar";
 import HomeHeader from "@/components/layout/home-header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export const metadata: Metadata = {
-  title: "BMS Dashboard",
-  description: "Business Management System Dashboard",
+  title: "BMS Dashboard - Home",
+  description: "BMS Homepage consisting of your businesses and other relevant information",
   robots: {
     index: false,
     follow: false,
   },
 };
-
 
 export default async function HomeLayout({
   children,
@@ -32,7 +21,6 @@ export default async function HomeLayout({
 }) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
- 
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
