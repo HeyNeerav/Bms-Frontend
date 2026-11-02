@@ -42,10 +42,10 @@ export function SignUpForm({
 
   const form = useAppForm({
     defaultValues: {
-      username: "john_doe",
-      name: "John Doe",
-      email: "john.doe@example.com",
-      password: "password123",
+      username: "",
+      name: "",
+      email: "",
+      password: "",
     },
     validators: {
       onSubmit: signUpSchema,
