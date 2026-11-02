@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const cookiesToForward: string[] = [];
+  let nextResponse: NextResponse;
 
   try {
     const { identifier, password } = await req.json();
@@ -17,15 +18,12 @@ export async function POST(req: NextRequest) {
       },
     );
 
-    const nextResponse = NextResponse.json({
+    nextResponse = NextResponse.json({
       message: "Login successful",
       data,
     });
 
-    return nextResponse;
   } catch (error) {
-    let nextResponse: NextResponse;
-
     if (error instanceof ApiError) {
       const backendStatus = error.status || 500;
       const backendMessage = error.message || "Failed to fetch user data";
@@ -41,10 +39,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+  }
+
     for (const cookie of cookiesToForward) {
       nextResponse.headers.append("Set-Cookie", cookie);
     }
-
-    return nextResponse;
-  }
+  
+  return nextResponse;
 }
