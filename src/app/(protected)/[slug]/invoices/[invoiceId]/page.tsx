@@ -23,7 +23,7 @@ export default async function Page(props: PageProps) {
   }
 
   if (params.invoiceId !== "new") {
-    void queryClient.prefetchQuery(
+    void queryClient.query(
       invoiceByIdOptions(business._id, params.invoiceId),
     );
   }

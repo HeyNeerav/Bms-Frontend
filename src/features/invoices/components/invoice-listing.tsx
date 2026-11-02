@@ -22,7 +22,7 @@ export default function InvoiceListingPage({
   };
 
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(invoicesQueryOptions(businessId, filters));
+  void queryClient.query(invoicesQueryOptions(businessId, filters));
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
