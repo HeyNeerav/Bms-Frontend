@@ -39,7 +39,6 @@ export default async function OverViewPage({ params, searchParams }: PageProps) 
 
   const { data: analytics } = (await queryClient.query({
     ...analyticsQueryOptions(business!._id, period),
-    staleTime: "static",
   })) as ApiResponse<Analytics>;
 
   return (

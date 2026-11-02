@@ -19,7 +19,7 @@ export default async function BusinessesLayout({
   const queryClient = getQueryClient();
 
   try {
-    await queryClient.query({ ...userMeQueryOptions(), staleTime: "static" });
+    await queryClient.query(userMeQueryOptions());
   } catch (error) {
     redirect("/api/auth/clear-session");
   }
