@@ -153,7 +153,7 @@ export function SignInForm({
               </Field>
               <Field>
                 <form.AppForm>
-                  <form.SubmitButton>Submit</form.SubmitButton>
+                  <form.SubmitButton>Sign in</form.SubmitButton>
                 </form.AppForm>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="/auth/sign-up">Sign up</a>
