@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Icons } from "@/components/icons";
 import { formatPrice } from "@/lib/format";
 import type { Analytics } from "@/features/overview/api/types";
+import { periodLabels } from "../schemas/analytics";
 
 interface AreaGraphProps {
   revenueTrend: Analytics["revenueTrend"];
@@ -78,7 +79,7 @@ export function AreaGraph({
         </CardTitle>
 
         <CardDescription>
-          Revenue from successful payments over the last {period}
+          Revenue from successful payments for {periodLabels[period]}
         </CardDescription>
       </CardHeader>
 
