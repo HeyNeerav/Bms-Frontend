@@ -13,17 +13,7 @@ import {
 } from "@/components/ui/select";
 
 import { Icons } from "@/components/icons";
-
-const periods = ["7d", "30d", "90d", "12m", "year", "lifetime"] as const;
-
-const periodLabels = {
-  "7d": "Last 7 days",
-  "30d": "Last 30 days",
-  "90d": "Last 90 days",
-  "12m": "Last 12 months",
-  year: "This year",
-  lifetime: "Lifetime",
-};
+import { periodLabels, periods } from "../schemas/analytics";
 
 export function AnalyticsPeriodFilter() {
   const [isPending, startTransition] = useTransition();

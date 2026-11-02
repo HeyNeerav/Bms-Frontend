@@ -3,10 +3,11 @@ import {
   createSerializer,
   parseAsInteger,
   parseAsString,
-  parseAsStringLiteral
-} from 'nuqs/server';
+  parseAsStringLiteral,
+} from "nuqs/server";
 
-import { getSortingStateParser } from '@/lib/data-table-parsers';
+import { getSortingStateParser } from "@/lib/data-table-parsers";
+import { periods } from "@/features/overview/schemas/analytics";
 
 export const searchParams = {
   page: parseAsInteger.withDefault(1),
@@ -17,7 +18,7 @@ export const searchParams = {
   category: parseAsString,
   role: parseAsString,
   sort: getSortingStateParser().withDefault([]),
-  period: parseAsStringLiteral(['7d', '30d', '90d', '12m', 'year', 'lifetime']).withDefault('30d'),
+  period: parseAsStringLiteral(periods).withDefault("30d"),
 };
 
 export const searchParamsCache = createSearchParamsCache(searchParams);
