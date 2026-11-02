@@ -110,9 +110,11 @@ Create a `.env` file in the project root:
 
 ```env
 BACKEND_API_URL=your_backend_api_url
+COOKIE_DOMAIN=.example.com
 ```
 
 Replace `your_backend_api_url` with the URL of your running BMS backend.
+Replace `.example.com` with your domain for cookie handling.
 
 ### Development
 
