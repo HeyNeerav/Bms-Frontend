@@ -186,7 +186,7 @@ export function InvoiceStatusChart({
                         </div>
 
                         <span className="tabular-nums text-muted-foreground">
-                          {item.count} ({percentage.toFixed(1)}%)
+                          ({percentage.toFixed(1)}%)
                         </span>
                       </div>
                         
