@@ -39,10 +39,6 @@ export const columns: ColumnDef<DataTableFeatures, Client>[] = [
   {
     accessorKey: 'companyName',
     header: 'COMPANY NAME',
-  }, 
-  {
-    accessorKey: 'gstNumber',
-    header: 'GST NUMBER',
   },
   {
     accessorKey: 'tags',
