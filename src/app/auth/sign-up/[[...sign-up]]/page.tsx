@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   description: 'Sign Up page for authentication.'
 };
 
-export default function Page() {
-  return <SignUpViewPage />;
+type PageProps = {
+  params: Promise<{
+    'sign-up'?: string[];
+  }>
+}
+
+export default function Page(props: PageProps) {
+  return <SignUpViewPage params={props.params} />;
 }
