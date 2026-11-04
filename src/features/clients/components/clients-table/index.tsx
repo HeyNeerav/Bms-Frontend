@@ -4,31 +4,28 @@ import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { useDataTable } from "@/hooks/use-data-table";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
-import { getSortingStateParser } from "@/lib/data-table-parsers";
+import { parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { clientsQueryOptions } from "../../api/queries";
 import { columns } from "./columns";
-import { useBusiness } from "@/components/business-provider";
 
-export function ClientsTable() {
-  const business = useBusiness();
-
+export function ClientsTable({ businessId }: { businessId: string }) {
   const [params] = useQueryStates({
     page: parseAsInteger.withDefault(1),
     limit: parseAsInteger.withDefault(10),
     name: parseAsString,
     // Same parser as the server searchParamsCache, so the prefetched query key matches
-    sort: getSortingStateParser().withDefault([]),
+    sortBy: parseAsString,
+    sortOrder: parseAsStringLiteral(["asc", "desc"] as const).withDefault("asc"),
   });
 
   const filters = {
     page: params.page,
     limit: params.limit,
     ...(params.name && { search: params.name }),
-    ...(params.sort.length > 0 && { sort: JSON.stringify(params.sort) }),
+    ...(params.sortBy && { sortBy: params.sortBy }),
   };
 
-  const { data } = useSuspenseQuery(clientsQueryOptions(business._id, filters));
+  const { data } = useSuspenseQuery(clientsQueryOptions(businessId, filters));
 
   const pageCount = Math.ceil(data.total_clients / params.limit);
 

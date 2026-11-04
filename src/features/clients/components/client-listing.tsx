@@ -13,14 +13,14 @@ export default function ClientListingPage({
   const search = searchParamsCache.get("name");
   const pageLimit = searchParamsCache.get("limit");
   const roles = searchParamsCache.get("role");
-  const sort = searchParamsCache.get("sort");
+  const sortBy = searchParamsCache.get("sortBy");
 
   const filters = {
     page,
     limit: pageLimit,
     ...(search && { search }),
     ...(roles && { roles }),
-    ...(sort.length > 0 && { sort: JSON.stringify(sort) }),
+    ...(sortBy && { sortBy }),
   };
 
   const queryClient = getQueryClient();
@@ -29,7 +29,7 @@ export default function ClientListingPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ClientsTable />
+      <ClientsTable businessId={businessId} />
     </HydrationBoundary>
   );
 }

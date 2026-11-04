@@ -14,7 +14,8 @@ export type ClientFilters = {
   page?: number;
   limit?: number;
   search?: string;
-  sort?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 };
 
 export type ClientsResponse = {
