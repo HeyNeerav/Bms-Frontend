@@ -2,7 +2,9 @@ import {
   createParser,
   parseAsInteger,
   parseAsNativeArrayOf,
+  parseAsString,
   parseAsStringEnum,
+  parseAsStringLiteral,
 } from "nuqs/server";
 import { z } from "zod";
 
@@ -213,11 +215,14 @@ export function getDataTableSearchParams<
   defaultSorting = [],
   defaultlimit = 10,
 }: DataTableSearchParamsOptions<TColumnConfigs>) {
+  const defaultSort = defaultSorting[0];
+
   return {
     page: parseAsInteger.withDefault(1),
     limit: parseAsInteger.withDefault(defaultlimit),
-    sort: getSortingStateParser(getSortableColumns(columnConfigs)).withDefault(
-      defaultSorting,
+    sortBy: parseAsString.withDefault(defaultSort?.id ?? ""),
+    sortOrder: parseAsStringLiteral(["asc", "desc"] as const).withDefault(
+      defaultSort?.desc ? "desc" : "asc",
     ),
     joinOperator: parseAsStringEnum([...JOIN_OPERATORS]).withDefault("and"),
     ...getFilterParsers(getFilterableColumns(columnConfigs)),
@@ -227,7 +232,8 @@ export function getDataTableSearchParams<
 interface DataTableSearch<TSortColumnId extends string> {
   page: number;
   limit: number;
-  sort: ColumnSortItem<TSortColumnId>[];
+  sortBy: TSortColumnId | "";
+  sortOrder: "asc" | "desc";
   joinOperator: JoinOperator;
 }
 
@@ -243,15 +249,18 @@ export function getDataTableQuery<
   >,
   columnConfigs: TColumnConfigs,
 ): DataTableColumnConfigsQuery<TColumnConfigs> {
-  const filtersById: Record<
-    FilterableColumnId<TColumnConfigs>,
-    ColumnFilterItem<FilterableColumnId<TColumnConfigs>>[]
-  > = search;
+  const filtersById = search;  
+  const sortableColumns = getSortableColumns(columnConfigs);
+
+  const sorting =
+    search.sortBy && sortableColumns.includes(search.sortBy)
+      ? [{ id: search.sortBy, desc: search.sortOrder === "desc" }]
+      : [];
 
   return {
     page: search.page,
     limit: search.limit,
-    sorting: search.sort,
+    sorting,
     filters: getColumnFilters(
       getKeys(getFilterableColumns(columnConfigs)),
       (id) => filtersById[id],

@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-table";
 import {
   parseAsInteger,
+  parseAsString,
   parseAsStringEnum,
   useQueryState,
   type UseQueryStateOptions,
@@ -33,7 +34,6 @@ import {
   getColumnFilterParser,
   getColumnFilters,
   getColumnFiltersKey,
-  getSortingStateParser,
   sortColumnFiltersBySearch,
 } from "@/lib/data-table-parsers";
 import {
@@ -44,7 +44,8 @@ import {
 
 const PAGE_KEY = "page";
 const PER_PAGE_KEY = "limit";
-const SORT_KEY = "sort";
+const SORT_BY_KEY = "sortBy";
+const SORT_ORDER_KEY = "sortOrder";
 const JOIN_OPERATOR_KEY = "joinOperator";
 const DEBOUNCE_MS = 300;
 const THROTTLE_MS = 50;
@@ -104,7 +105,8 @@ function useDataTable<TData extends RowData>({
 
   const pageKey = queryKeys?.page ?? PAGE_KEY;
   const limitKey = queryKeys?.limit ?? PER_PAGE_KEY;
-  const sortKey = queryKeys?.sort ?? SORT_KEY;
+  const sortByKey = queryKeys?.sortBy ?? SORT_BY_KEY;
+  const sortOrderKey = queryKeys?.sortOrder ?? SORT_ORDER_KEY;
   const joinOperatorKey = queryKeys?.joinOperator ?? JOIN_OPERATOR_KEY;
 
   const queryStateOptions = React.useMemo<
@@ -136,6 +138,7 @@ function useDataTable<TData extends RowData>({
     () => parseAsInteger.withOptions(queryStateOptions).withDefault(1),
     [queryStateOptions],
   );
+
   const limitParser = React.useMemo(
     () =>
       parseAsInteger
@@ -147,7 +150,7 @@ function useDataTable<TData extends RowData>({
   );
 
   const [page, setPage] = useQueryState(pageKey, pageParser);
-  const [limit, setlimit] = useQueryState(limitKey, limitParser);
+  const [limit, setLimit] = useQueryState(limitKey, limitParser);
 
   const pagination = React.useMemo<PaginationState>(
     () => ({ pageIndex: page - 1, pageSize: limit }),
@@ -156,8 +159,9 @@ function useDataTable<TData extends RowData>({
 
   function onPaginationChange(updater: Updater<PaginationState>) {
     const next = functionalUpdate(updater, pagination);
+
     void setPage(next.pageIndex + 1);
-    void setlimit(next.pageSize);
+    void setLimit(next.pageSize);
   }
 
   const columnIndex = React.useMemo(() => {
@@ -166,10 +170,13 @@ function useDataTable<TData extends RowData>({
 
     for (const column of columns) {
       if (!column.id) continue;
+
       const hasAccessor = "accessorKey" in column || "accessorFn" in column;
+
       if (hasAccessor && column.enableSorting !== false) {
         sortableIds.add(column.id);
       }
+
       if (!column.enableColumnFilter) continue;
 
       filterableVariants.set(column.id, column.meta?.variant ?? "text");
@@ -189,18 +196,45 @@ function useDataTable<TData extends RowData>({
     };
   }, [columns]);
 
-  const sortingParser = React.useMemo(
+  const defaultSort = initialTableState?.sorting?.[0];
+
+  const sortByParser = React.useMemo(
     () =>
-      getSortingStateParser(columnIndex.sortableIds)
+      parseAsString
         .withOptions(queryStateOptions)
-        .withDefault(initialTableState?.sorting ?? EMPTY_SORTING),
-    [columnIndex, initialTableState, queryStateOptions],
+        .withDefault(defaultSort?.id ?? ""),
+    [defaultSort?.id, queryStateOptions],
   );
 
-  const [sorting, setSorting] = useQueryState(sortKey, sortingParser);
+  const sortOrderParser = React.useMemo(
+    () =>
+      parseAsStringEnum(["asc", "desc"])
+        .withOptions(queryStateOptions)
+        .withDefault(defaultSort?.desc ? "desc" : "asc"),
+    [defaultSort?.desc, queryStateOptions],
+  );
+
+  const [sortBy, setSortBy] = useQueryState(sortByKey, sortByParser);
+
+  const [sortOrder, setSortOrder] = useQueryState(
+    sortOrderKey,
+    sortOrderParser,
+  );
+
+  const sorting = React.useMemo<SortingState>(
+    () =>
+      sortBy && columnIndex.sortableIds.has(sortBy)
+        ? [{ id: sortBy, desc: sortOrder === "desc" }]
+        : [],
+    [sortBy, sortOrder, columnIndex],
+  );
 
   function onSortingChange(updater: Updater<SortingState>) {
-    void setSorting(functionalUpdate(updater, sorting));
+    const next = functionalUpdate(updater, sorting);
+    const nextSort = next[0];
+
+    void setSortBy(nextSort?.id ?? null);
+    void setSortOrder(nextSort ? (nextSort.desc ? "desc" : "asc") : null);
   }
 
   const joinOperatorParser = React.useMemo(
@@ -244,6 +278,7 @@ function useDataTable<TData extends RowData>({
 
   const filterOrder = React.useMemo(() => {
     const filterableIds = new Set(columnIndex.filterableIds);
+
     return [...new Set(new URLSearchParams(search).keys())]
       .filter((key) => filterableIds.has(key))
       .join("&");
@@ -260,11 +295,13 @@ function useDataTable<TData extends RowData>({
       ),
     [columnIndex, filterParams, filterOrder],
   );
+
   const urlFiltersKey = getColumnFiltersKey(urlFilters);
 
   const [filtersDraft, setFiltersDraft] = React.useState<FiltersDraft | null>(
     () => {
       const initialFilters = initialTableState?.columnFilters;
+
       if (urlFilters.length > 0 || !initialFilters?.length) return null;
 
       return {
@@ -286,21 +323,26 @@ function useDataTable<TData extends RowData>({
       const filters = getActiveFilters(
         columnIndex.normalizeColumnFilters(columnFilters),
       ).filter((filter) => Object.hasOwn(columnIndex.variantById, filter.id));
+
       const params = new Map<string, ColumnFilterItem[] | null>();
 
       for (const filter of filters) {
         const group = params.get(filter.id);
+
         if (group) group.push(filter);
         else params.set(filter.id, [filter]);
       }
+
       for (const id of columnIndex.filterableIds) {
         if (!params.has(id)) params.set(id, null);
       }
 
       const nextUrlFiltersKey = getColumnFiltersKey(filters);
+
       setFiltersDraft(
         (prev) => prev && { ...prev, urlFiltersKey: nextUrlFiltersKey },
       );
+
       void setPage(1);
       void setFilterParams(Object.fromEntries(params));
     },
@@ -309,6 +351,7 @@ function useDataTable<TData extends RowData>({
 
   function onColumnFiltersChange(updater: Updater<ColumnFiltersState>) {
     const filters = functionalUpdate(updater, columnFilters);
+
     setFiltersDraft({ filters, urlFiltersKey });
     debouncedWriteFilters(filters, urlFiltersKey);
   }
@@ -347,6 +390,7 @@ function useDataTable<TData extends RowData>({
 
 function subscribeToHistory(onChange: () => void) {
   window.addEventListener("popstate", onChange);
+
   return () => window.removeEventListener("popstate", onChange);
 }
 

@@ -25,7 +25,8 @@ export interface DataTableColumnMeta {
 export interface DataTableQueryKeys {
   page: string;
   limit: string;
-  sort: string;
+  sortBy: string;
+  sortOrder: string;
   joinOperator: string;
 }
 

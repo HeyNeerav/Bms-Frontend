@@ -6,18 +6,18 @@ import {
   parseAsStringLiteral,
 } from "nuqs/server";
 
-import { getSortingStateParser } from "@/lib/data-table-parsers";
 import { periods } from "@/features/overview/schemas/analytics";
 
 export const searchParams = {
   page: parseAsInteger.withDefault(1),
   limit: parseAsInteger.withDefault(10),
+  sortBy: parseAsString,
+  sortOrder: parseAsStringLiteral(["asc", "desc"] as const).withDefault("asc"),
   search: parseAsString,
   name: parseAsString,
   gender: parseAsString,
   category: parseAsString,
   role: parseAsString,
-  sort: getSortingStateParser().withDefault([]),
   period: parseAsStringLiteral(periods).withDefault("30d"),
 };
 
