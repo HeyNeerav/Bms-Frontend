@@ -9,12 +9,21 @@ export const cookieOptions = {
   domain: process.env.NODE_ENV === "production" ? process.env.COOKIE_DOMAIN : undefined,
 };
 
+const accessTokenCookieOptions = {
+  ...cookieOptions,
+  maxAge: 60 * 60 * 24 * 7,
+};
+
+const refreshTokenCookieOptions = {
+  ...cookieOptions,
+  maxAge: 60 * 60 * 24 * 30,
+};
 
 export async function GET(req: NextRequest) {
   const res = NextResponse.redirect(new URL("/auth/sign-in", req.url));
 
-  res.cookies.delete({name: "accessToken", ...cookieOptions});
-  res.cookies.delete({ name: "refreshToken", ...cookieOptions });
+  res.cookies.delete({name: "accessToken", ...accessTokenCookieOptions});
+  res.cookies.delete({ name: "refreshToken", ...refreshTokenCookieOptions });
   
   return res;
 }
