@@ -24,6 +24,7 @@ import { useAppForm } from "@/lib/form";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
+import { ApiError } from "@/lib/api";
 
 export const signInSchema = z.object({
   identifier: z.union([
@@ -70,10 +71,34 @@ export function SignInForm({
             "--border-radius": "calc(var(--radius)  + 4px)",
           } as React.CSSProperties,
         });
-      } catch (error) {
+      } catch (error: any) {
+        if (error?.message === "User is not verified") {
+          toast.error(
+            "Your account is not verified. Please check your email for the verification code.",
+            {
+              description:
+                error instanceof Error || error instanceof ApiError
+                  ? error.message
+                  : "Unknown error",
+              closeButton: true,
+              position: "bottom-right",
+              classNames: {
+                content: "flex flex-col gap-2",
+              },
+              style: {
+                "--border-radius": "calc(var(--radius)  + 4px)",
+              } as React.CSSProperties,
+            },
+          );
+          router.push("/auth/sign-up/verify");
+          return;
+        }
+
         toast.error("Invalid credentials. Please try again.", {
           description:
-            "The email/username or password you entered is incorrect.",
+            error instanceof Error || error instanceof ApiError
+              ? error.message
+              : "Unknown error",
           closeButton: true,
           position: "bottom-right",
           classNames: {
@@ -107,7 +132,11 @@ export function SignInForm({
           >
             <FieldGroup>
               <Field>
-                <Button variant="outline" type="button" onClick={() => window.location.href = "/api/auth/google"}>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => (window.location.href = "/api/auth/google")}
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
@@ -156,7 +185,8 @@ export function SignInForm({
                   <form.SubmitButton>Sign in</form.SubmitButton>
                 </form.AppForm>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="/auth/sign-up">Sign up</a>
+                  Don&apos;t have an account?{" "}
+                  <a href="/auth/sign-up">Sign up</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
