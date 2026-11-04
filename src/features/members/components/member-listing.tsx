@@ -13,14 +13,16 @@ export default function MemberListingPage({
   const search = searchParamsCache.get("search");
   const pageLimit = searchParamsCache.get("limit");
   const roles = searchParamsCache.get("role");
-  const sort = searchParamsCache.get("sort");
+  const sortBy = searchParamsCache.get("sortBy");
+  const sortOrder = searchParamsCache.get("sortOrder");
 
   const filters = {
     page,
     limit: pageLimit,
     ...(search && { search }),
     ...(roles && { roles }),
-    ...(sort.length > 0 && { sort: JSON.stringify(sort) }),
+    ...(sortBy && { sortBy }),
+    ...(sortOrder && { sortOrder }),
   };
 
   const queryClient = getQueryClient();

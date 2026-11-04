@@ -16,6 +16,7 @@ export type MemberFilters = {
   limit?: number;
   search?: string;
   sortBy?: string;
+  sortOrder?: "asc" | "desc";
 };
 
 export type MembersResponse = {
