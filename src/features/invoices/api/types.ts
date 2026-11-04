@@ -44,7 +44,7 @@ export type InvoiceFilters = {
   limit?: number;
   page?: number;
   sortBy?: string;
-  sortOrder?: -1 | 1;
+  sortOrder?: "asc" | "desc";
 };
 
 export type InvoicesResponse = {
