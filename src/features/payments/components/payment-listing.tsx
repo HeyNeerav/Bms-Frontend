@@ -12,13 +12,15 @@ export default function PaymentListingPage({
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("name");
   const pageLimit = searchParamsCache.get("limit");
-  const sort = searchParamsCache.get("sort");
+  const sortBy = searchParamsCache.get("sortBy");
+  const sortOrder = searchParamsCache.get("sortOrder");
 
   const filters = {
     page,
     limit: pageLimit,
     ...(search && { search }),
-    ...(sort.length > 0 && { sort: JSON.stringify(sort) }),
+    ...(sortBy && { sortBy }),
+    ...(sortOrder && { sortOrder }),
   };
 
   const queryClient = getQueryClient();

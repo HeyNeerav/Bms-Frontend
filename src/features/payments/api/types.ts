@@ -41,7 +41,8 @@ export type PaymentFilters = {
   limit?: number;
   categories?: string;
   search?: string;
-  sort?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 };
 
 export type PaymentsResponse = {
