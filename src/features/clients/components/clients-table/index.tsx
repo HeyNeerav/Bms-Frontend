@@ -13,7 +13,6 @@ export function ClientsTable({ businessId }: { businessId: string }) {
     page: parseAsInteger.withDefault(1),
     limit: parseAsInteger.withDefault(10),
     name: parseAsString,
-    // Same parser as the server searchParamsCache, so the prefetched query key matches
     sortBy: parseAsString,
     sortOrder: parseAsStringLiteral(["asc", "desc"] as const).withDefault("asc"),
   });
