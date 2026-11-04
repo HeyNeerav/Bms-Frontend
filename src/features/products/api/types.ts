@@ -23,7 +23,8 @@ export type ProductFilters = {
   limit?: number;
   categories?: string;
   search?: string;
-  sort?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 };
 
 export type ProductsResponse = {

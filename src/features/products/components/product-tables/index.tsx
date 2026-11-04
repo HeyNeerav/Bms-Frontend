@@ -4,11 +4,13 @@ import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { useDataTable } from "@/hooks/use-data-table";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { parseAsInteger, useQueryStates } from "nuqs";
 import {
-  getColumnFilterParser,
-  getSortingStateParser,
-} from "@/lib/data-table-parsers";
+  parseAsInteger,
+  parseAsString,
+  parseAsStringLiteral,
+  useQueryStates,
+} from "nuqs";
+import { getColumnFilterParser } from "@/lib/data-table-parsers";
 import { productsQueryOptions } from "../../api/queries";
 import { columns } from "./columns";
 import { useBusiness } from "@/components/business-provider";
@@ -18,7 +20,10 @@ export function ProductTable() {
   const [params] = useQueryStates({
     page: parseAsInteger.withDefault(1),
     limit: parseAsInteger.withDefault(10),
-    sort: getSortingStateParser().withDefault([]),
+    sortBy: parseAsString,
+    sortOrder: parseAsStringLiteral(["asc", "desc"] as const).withDefault(
+      "asc",
+    ),
   });
 
   const [nameFilters] = useQueryStates({
@@ -35,7 +40,8 @@ export function ProductTable() {
     page: params.page,
     limit: params.limit,
     ...(debouncedSearch && { search: debouncedSearch }),
-    ...(params.sort.length > 0 && { sortBy: JSON.stringify(params.sort) }),
+    ...(params.sortBy && { sortBy: params.sortBy }),
+    ...(params.sortOrder && { sortOrder: params.sortOrder }),
   };
 
   const business = useBusiness();
