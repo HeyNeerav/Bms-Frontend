@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   try {
     const { identifier, password } = await req.json();
 
-    const data = await api.post(
+    const respData = await api.post(
       "/auth/login",
       { identifier, password },
       {
@@ -18,32 +18,30 @@ export async function POST(req: NextRequest) {
       },
     );
 
-    nextResponse = NextResponse.json({
-      message: "Login successful",
-      data,
-    });
-
+    nextResponse = NextResponse.json(respData);
   } catch (error) {
     if (error instanceof ApiError) {
-      const backendStatus = error.status || 500;
-      const backendMessage = error.message || "Failed to fetch user data";
-
       nextResponse = NextResponse.json(
-        { error: backendMessage },
-        { status: backendStatus },
+        {
+          success: false,
+          message: error.message || "Failed to fetch user data",
+        },
+        { status: error.status || 500 },
       );
     } else {
       nextResponse = NextResponse.json(
-        { error: "Failed to fetch user data" },
+        {
+          success: false,
+          message: "Failed to fetch user data",
+        },
         { status: 500 },
       );
     }
-
   }
 
-    for (const cookie of cookiesToForward) {
-      nextResponse.headers.append("Set-Cookie", cookie);
-    }
-  
+  for (const cookie of cookiesToForward) {
+    nextResponse.headers.append("Set-Cookie", cookie);
+  }
+
   return nextResponse;
 }
