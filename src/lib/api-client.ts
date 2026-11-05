@@ -1,3 +1,5 @@
+import { ApiError } from "./api-error";
+
 const BASE_URL = '/api';
 
 export async function fetchWrapper<T>(
@@ -17,7 +19,8 @@ export async function fetchWrapper<T>(
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    throw new Error(
+    throw new ApiError(
+      res.status,
       errorData.message || `API error: ${res.status} ${res.statusText}`,
     );
   }
