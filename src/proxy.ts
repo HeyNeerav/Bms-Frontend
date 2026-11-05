@@ -17,13 +17,15 @@ export function proxy(request: NextRequest) {
     matchesRoute(pathname, route),
   );
   const hasAccessToken = request.cookies.has("accessToken");
+  const hasRefreshToken = request.cookies.has("refreshToken");
+  const hasSession = hasAccessToken || hasRefreshToken;
 
-  if (isPrivateAuthRoute && hasAccessToken) {
+  if (isPrivateAuthRoute && hasSession) {
     const homeUrl = new URL("/businesses", request.url);
     return NextResponse.redirect(homeUrl);
   }
 
-  if (!isPrivateAuthRoute && !hasAccessToken) {
+  if (!isPrivateAuthRoute && !hasSession) {
     const loginUrl = new URL("/auth/sign-in", request.url);
 
     return NextResponse.redirect(loginUrl);
