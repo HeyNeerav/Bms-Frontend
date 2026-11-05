@@ -99,7 +99,7 @@ export function InvoiceStatusChart({
       <CardHeader>
         <CardTitle>Invoice Status</CardTitle>
         <CardDescription>
-          Distribution of invoices for {formatPeriod(period).toLowerCase()}
+          Distribution of invoices for {formatPeriod(period)}
         </CardDescription>
       </CardHeader>
 
@@ -141,6 +141,7 @@ export function InvoiceStatusChart({
                     paddingAngle={3}
                     cornerRadius={5}
                     strokeWidth={0}
+                    
                   />
                 </PieChart>
               </ChartContainer>
