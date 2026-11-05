@@ -61,19 +61,19 @@ export default async function OverViewPage({
                   period={analytics.period}
                 />
               </div>
-              <div className="col-span-6">
+              <div className="col-span-5">
                 <BarGraph topProducts={analytics.topProducts} />
               </div>
-              <div className="col-span-4">
+              <div className="col-span-5">
                 <InvoiceStatusChart
                   invoiceStats={analytics.invoiceStats}
                   period={analytics.period}
                 />
               </div>
-              <div className="col-span-6">
+              <div className="col-span-5">
                 <RecentSales sales={analytics.recentSales} />
               </div>
-              <div className="col-span-4">
+              <div className="col-span-5">
                 <RevenueByPaymentMethodChart revenueByPaymentMethod={analytics.revenueByPaymentMethod} />
               </div>
             </div>
