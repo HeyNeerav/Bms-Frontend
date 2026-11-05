@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const privateAuthRoutes = [
+const authRoutes = [
   "/auth/sign-up",
   "/auth/sign-in",
   "/auth/forgot-password",
@@ -13,19 +13,14 @@ function matchesRoute(pathname: string, route: string) {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isPrivateAuthRoute = privateAuthRoutes.some((route) =>
+  const isAuthRoute = authRoutes.some((route) =>
     matchesRoute(pathname, route),
   );
   const hasAccessToken = request.cookies.has("accessToken");
   const hasRefreshToken = request.cookies.has("refreshToken");
   const hasSession = hasAccessToken || hasRefreshToken;
 
-  if (isPrivateAuthRoute && hasSession) {
-    const homeUrl = new URL("/businesses", request.url);
-    return NextResponse.redirect(homeUrl);
-  }
-
-  if (!isPrivateAuthRoute && !hasSession) {
+  if (!isAuthRoute && !hasSession) {
     const loginUrl = new URL("/auth/sign-in", request.url);
 
     return NextResponse.redirect(loginUrl);
