@@ -1,6 +1,13 @@
 "use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   Card,
@@ -58,6 +65,26 @@ export function AreaGraph({
   const isIncreasing = (revenueChange ?? 0) > 0;
   const isDecreasing = (revenueChange ?? 0) < 0;
 
+  const yearBoundaries =
+    period === "lifetime"
+      ? revenueTrend
+          .filter(({ date }) => {
+            const value =
+              date instanceof Date ? date : new Date(`${date}-01T00:00:00Z`);
+
+            return value.getUTCMonth() === 0;
+          })
+          .map(({ date }) => ({
+            date:
+              date instanceof Date
+                ? `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`
+                : date,
+            year: String(
+              date instanceof Date ? date.getUTCFullYear() : date.slice(0, 4),
+            ),
+          }))
+      : [];
+  
   return (
     <Card>
       <CardHeader>
@@ -84,9 +111,27 @@ export function AreaGraph({
       </CardHeader>
 
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer
+          config={chartConfig}
+          className="h-[240px] w-full sm:h-[280px] lg:h-[320px]"
+        >
           <AreaChart accessibilityLayer data={revenueTrend}>
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
+            {yearBoundaries.map(({ date }) => (
+              <ReferenceLine
+                key={date}
+                x={date}
+                stroke="var(--muted-foreground)"
+                strokeDasharray="3 3"
+                strokeOpacity={0.5}
+                label={{
+                  value: date.slice(0, 4),
+                  position: "insideTop",
+                  fill: "var(--muted-foreground)",
+                  fontSize: 11,
+                }}
+              />
+            ))}
             <YAxis
               tickLine={false}
               axisLine={false}
@@ -125,7 +170,7 @@ export function AreaGraph({
 
             <Area
               dataKey="revenue"
-              type="natural"
+              type="monotone"
               fill="url(#dotted-background-pattern-revenue)"
               fillOpacity={0.4}
               stroke="var(--color-revenue)"
