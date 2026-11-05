@@ -1,28 +1,8 @@
-// lib/businesses.ts
-import { cache } from "react";
-import { cookies } from "next/headers";
-import { api } from "@/lib/api";
+import { getQueryClient } from "./query-client";
+import { businessessQueryOptions } from "@/features/businesses/api/queries";
 
-type BusinessRole = "OWNER" | "ADMIN" | "EMPLOYEE";
-
-type Business = {
-  _id: string;
-  name: string;
-  slug: string;
-  logo?: {
-    url?: string | undefined;
-    publicId?: string | undefined;
-  },
-  role: BusinessRole;
-};
-
-
-export const getBusinessBySlug = cache(async (slug: string) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
-
-  const res = await api.get<{ data: Business[] }>("/businesses", { token });
-  const business = res.data.find((business) => business.slug === slug);
-
-  return business;
-});
+export const getBusinessBySlug = async (slug: string) => {
+  const queryClient = getQueryClient();
+  const { data } = await queryClient.query(businessessQueryOptions());
+  return data.find((business) => business.slug === slug);
+};  

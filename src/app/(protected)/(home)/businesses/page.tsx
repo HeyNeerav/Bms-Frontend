@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -10,12 +12,13 @@ import {
   Search,
 } from "lucide-react";
 
-import { apiClient } from "@/lib/api-client";
+import { getQueryClient } from "@/lib/query-client";
+import { businessessQueryOptions } from "@/features/businesses/api/queries";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
 
 type Business = {
   _id: string;
@@ -25,8 +28,6 @@ type Business = {
 };
 
 function BusinessCard({ business }: { business: Business }) {
-  const router = useRouter();
-
   return (
     <Card className="rounded-xl border-border/80 bg-card/85 shadow-none transition hover:-translate-y-0.5 hover:shadow-md">
       <CardContent className="p-5">
@@ -69,8 +70,9 @@ export default function Page() {
   useEffect(() => {
     const fetchBusinesses = async () => {
       try {
-        const res: { data: Business[] } = await apiClient.get("/businesses");
-        setBusinesses(res.data);
+        const queryClient = getQueryClient();
+        const { data } = await queryClient.query(businessessQueryOptions());
+        setBusinesses(data);
       } catch (error) {
         setBusinesses([]);
       }
