@@ -7,7 +7,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
 import { useAppForm } from "@/lib/form";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 
 import { NameFormValues, nameSchema } from "../schemas/profile";
 import { updateProfileMutation } from "../api/mutations";
@@ -42,7 +42,7 @@ export function ProfileForm({ initialData }: { initialData: User }) {
       onSubmit: nameSchema,
     },
     onSubmit: ({ value }) => {
-      const { name } = nameSchema.parse(value)
+      const { name } = nameSchema.parse(value);
       updateMutation.mutate(name);
     },
   });
@@ -72,7 +72,7 @@ export function ProfileForm({ initialData }: { initialData: User }) {
                 />
               )}
             />
-             <div className="space-y-2">
+            <div className="space-y-2">
               <label className="text-sm font-medium">Email Address</label>
               <Input value={initialData.email} disabled />
               <p className="text-xs text-muted-foreground">

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { useAppForm } from "@/lib/form";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 
 import { updateAvatarMutation } from "../api/mutations";
 import type { User } from "../api/types";

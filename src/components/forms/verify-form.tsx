@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 
 export const verifySchema = z.object({
   email: z.email("Invalid email address"),

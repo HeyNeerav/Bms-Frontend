@@ -24,7 +24,7 @@ import { useAppForm } from "@/lib/form";
 import Link from "next/link";
 import { apiClient } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 
 export const signInSchema = z.object({
   identifier: z.union([

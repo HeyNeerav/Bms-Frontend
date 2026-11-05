@@ -20,8 +20,7 @@ import { useEffect, useState } from "react";
 import { productsQueryOptions } from "@/features/products/api/queries";
 import { ProductPicker } from "@/components/forms/product-picker";
 import { InvoiceItems } from "./invoice-items";
-import { ApiError } from "@/lib/api";
-
+import { ApiError } from "@/lib/api-error";
 
 type SelectedProduct = {
   _id: string;
@@ -124,7 +123,7 @@ export default function InvoiceForm({
   const debouncedClientSearch = useDebouncedValue(clientSearch, 300);
 
   const { data: clientQueryData, isLoading: isClientLoading } = useQuery(
-    clientsQueryOptions(business._id, {search: debouncedClientSearch}),
+    clientsQueryOptions(business._id, { search: debouncedClientSearch }),
   );
 
   const [productSearch, setProductSearch] = useState("");
@@ -133,7 +132,6 @@ export default function InvoiceForm({
   const { data: productQueryData, isLoading: isProductLoading } = useQuery(
     productsQueryOptions(business._id, { search: debouncedProductSearch }),
   );
-
 
   const [selectedProducts, setSelectedProducts] = useState<
     Record<string, SelectedProduct>
@@ -181,20 +179,20 @@ export default function InvoiceForm({
 
     form.setFieldValue(
       "items",
-      form.getFieldValue("items").map((item) =>
-        item.productId === productId
-          ? { ...item, quantity }
-          : item,
-      ),
+      form
+        .getFieldValue("items")
+        .map((item) =>
+          item.productId === productId ? { ...item, quantity } : item,
+        ),
     );
   };
 
   const removeProduct = (productId: string) => {
     form.setFieldValue(
       "items",
-      form.getFieldValue("items").filter(
-        (item) => item.productId !== productId,
-      ),
+      form
+        .getFieldValue("items")
+        .filter((item) => item.productId !== productId),
     );
   };
 
@@ -236,7 +234,7 @@ export default function InvoiceForm({
                 )}
               />
             </div>
-            <div className="space-y-4">    
+            <div className="space-y-4">
               <ProductPicker
                 options={
                   productQueryData?.products?.map((product) => ({

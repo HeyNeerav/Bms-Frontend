@@ -19,7 +19,7 @@ import { ClientFormSheet } from "../client-form-sheet";
 import { useBusiness } from "@/components/business-provider";
 import { getQueryClient } from "@/lib/query-client";
 import { clientKeys } from "../../api/queries";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 
 interface CellActionProps {
   data: Client;
@@ -60,7 +60,11 @@ export function CellAction({ data }: CellActionProps) {
         }
         loading={deleteMutation.isPending}
       />
-      <ClientFormSheet client={data} open={editOpen} onOpenChange={setEditOpen} />
+      <ClientFormSheet
+        client={data}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+      />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger
           render={<Button variant="ghost" className="h-8 w-8 p-0" />}

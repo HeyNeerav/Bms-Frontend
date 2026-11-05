@@ -1,4 +1,5 @@
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

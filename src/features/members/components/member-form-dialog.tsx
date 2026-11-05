@@ -13,7 +13,7 @@ import { memberSchema, type MemberFormValues } from "../schemas/member";
 import { ROLE_OPTIONS } from "./members-table/options";
 import { memberKeys } from "../api/queries";
 
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 import { useAppForm } from "@/lib/form";
 import { getQueryClient } from "@/lib/query-client";
 
@@ -39,7 +39,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 
 interface MemberFormSheetProps {
   member?: Member;
@@ -168,7 +167,11 @@ export function MemberFormDialog({
           >
             Cancel
           </Button>
-          <LoadingButton type="submit" form="member-form-dialog" disabled={isPending}>
+          <LoadingButton
+            type="submit"
+            form="member-form-dialog"
+            disabled={isPending}
+          >
             {isEdit ? "Update Role" : "Invite Member"}
           </LoadingButton>
         </DialogFooter>
@@ -176,7 +179,6 @@ export function MemberFormDialog({
     </Dialog>
   );
 }
-
 
 export function MemberFormSheetTrigger() {
   const [open, setOpen] = useState(false);

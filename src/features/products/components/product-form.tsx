@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { createProductMutation, updateProductMutation } from "../api/mutations";
 import type { Product } from "../api/types";
 import { useBusiness } from "@/components/business-provider";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 
 export default function ProductForm({
   initialData,

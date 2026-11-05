@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { createPaymentMutation } from "../api/mutations";
 import type { Payment } from "../api/types";
 import { useBusiness } from "@/components/business-provider";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 import { paymentMethods, paymentStatuses } from "./payment-tables/options";
 import { useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -210,5 +210,3 @@ export default function PaymentForm({
     </Card>
   );
 }
-
-

@@ -22,7 +22,7 @@ import { clientSchema, type ClientFormValues } from "../schemas/client";
 import { useBusiness } from "@/components/business-provider";
 import { clientKeys } from "../api/queries";
 import { getQueryClient } from "@/lib/query-client";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 
 const STATUS_OPTIONS = [
   { value: "Active", label: "Active" },

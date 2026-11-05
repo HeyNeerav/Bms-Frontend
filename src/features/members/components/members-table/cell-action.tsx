@@ -19,7 +19,7 @@ import { MemberFormDialog } from "../member-form-dialog";
 import { useBusiness } from "@/components/business-provider";
 import { getQueryClient } from "@/lib/query-client";
 import { memberKeys } from "../../api/queries";
-import { ApiError } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 
 interface CellActionProps {
   data: Member;
@@ -56,12 +56,23 @@ export function CellAction({ data }: CellActionProps) {
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={() =>
-          deleteMutation.mutate({ businessId: business._id, userId: data.user._id })
+          deleteMutation.mutate({
+            businessId: business._id,
+            userId: data.user._id,
+          })
         }
         loading={deleteMutation.isPending}
       />
-      <MemberFormDialog member={data} open={editOpen} onOpenChange={setEditOpen} />
-      <Button onClick={() => setDeleteOpen(true)} variant="ghost" className="hover:text-red-700">
+      <MemberFormDialog
+        member={data}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+      />
+      <Button
+        onClick={() => setDeleteOpen(true)}
+        variant="ghost"
+        className="hover:text-red-700"
+      >
         <Icons.trash />
       </Button>
 

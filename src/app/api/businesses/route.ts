@@ -1,4 +1,5 @@
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
+import { ApiError } from "@/lib/api-error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -7,15 +8,11 @@ export async function GET(req: NextRequest) {
 
   try {
     const respData = await api.get("/businesses", { token });
-    return NextResponse.json(respData)
+    return NextResponse.json(respData);
   } catch (error) {
-
     if (error instanceof ApiError) {
       if (error.status === 401) {
-        return NextResponse.json(
-          { error: "Unauthorized" },
-          { status: 401 },
-        );
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
     }
 
@@ -26,8 +23,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-
-export async function POST(req: NextRequest) { 
+export async function POST(req: NextRequest) {
   const cookieStore = req.cookies;
   const token = cookieStore.get("accessToken")?.value;
 
@@ -41,16 +37,13 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     if (error instanceof ApiError) {
       if (error.status === 401) {
-        return NextResponse.json(
-          { error: "Unauthorized" },
-          { status: 401 },
-        );
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
     }
 
     return NextResponse.json(
       { error: "Failed to create business" },
       { status: 500 },
-    ); 
+    );
   }
 }
