@@ -10,4 +10,5 @@ export const businessessQueryOptions = () =>
   queryOptions({
     queryKey: businessesKeys.me(),
     queryFn: () => getBusinesses(),
+    staleTime: 1000 * 60 * 5,
   });
