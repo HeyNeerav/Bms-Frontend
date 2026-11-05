@@ -14,6 +14,7 @@ import { analyticsQueryOptions } from "@/features/overview/api/queries";
 import { OverviewCards } from "@/features/overview/components/cards";
 import { AnalyticsPeriodFilter } from "@/features/overview/components/period-filter";
 import { periodLabels } from "@/features/overview/schemas/analytics";
+import { RevenueByPaymentMethodChart } from "@/features/overview/components/revenue-by-payment-method";
 
 type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -52,22 +53,28 @@ export default async function OverViewPage({
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <OverviewCards overviewAnalytics={analytics.overview} />
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <div className="col-span-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-10">
+              <div className="col-span-10">
                 <AreaGraph
                   revenueTrend={analytics.revenueTrend}
                   revenueChange={analytics.overview.revenueChange}
                   period={analytics.period}
                 />
               </div>
-              <div className="col-span-4 md:col-span-3">
+              <div className="col-span-6">
+                <BarGraph topProducts={analytics.topProducts} />
+              </div>
+              <div className="col-span-4">
+                <InvoiceStatusChart
+                  invoiceStats={analytics.invoiceStats}
+                  period={analytics.period}
+                />
+              </div>
+              <div className="col-span-6">
                 <RecentSales sales={analytics.recentSales} />
               </div>
               <div className="col-span-4">
-                <BarGraph topProducts={analytics.topProducts} />
-              </div>
-              <div className="col-span-4 md:col-span-3">
-                <InvoiceStatusChart invoiceStats={analytics.invoiceStats} />
+                <RevenueByPaymentMethodChart revenueByPaymentMethod={analytics.revenueByPaymentMethod} />
               </div>
             </div>
           </TabsContent>
