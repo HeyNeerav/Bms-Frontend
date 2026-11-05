@@ -56,7 +56,6 @@ export default function AppSidebar({ slug }: { slug: string }) {
           <img src="/logo.webp" alt="BMS Logo" className="size-8" />
           <div className="flex flex-col">
             <span className={`${state === "collapsed" && "hidden"} text-lg font-semibold tracking-tight`}>BMS</span>
-            <span className={`${state === "collapsed" && "hidden"} text-xs font-medium tracking-wide text-muted-foreground`}>Business Management System</span>
           </div>
         </Link>
       </SidebarHeader>
