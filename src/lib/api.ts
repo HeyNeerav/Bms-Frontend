@@ -1,4 +1,4 @@
-const BASE_URL = process.env.BACKEND_API_URL || "http://localhost:8000/api/v1";
+const BASE_URL = process.env.BACKEND_API_URL;
 
 export class ApiError extends Error {
   constructor(

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BASE_URL =
-  process.env.BACKEND_API_URL || "http://localhost:8000/api/v1";
+const BASE_URL = process.env.BACKEND_API_URL;
 
 const AUTH_ROUTES = new Set([
   "/auth/sign-up",
@@ -30,9 +29,7 @@ function getTokenExpiry(token?: string): number | null {
 
     if (!payload) return null;
 
-    const normalized = payload
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
 
     const decoded = JSON.parse(atob(normalized));
 
@@ -84,10 +81,7 @@ async function refreshTokens(request: NextRequest) {
   }
 }
 
-function createResponse(
-  request: NextRequest,
-  setCookies: string[] = [],
-) {
+function createResponse(request: NextRequest, setCookies: string[] = []) {
   const requestHeaders = new Headers(request.headers);
 
   if (setCookies.length) {
@@ -146,9 +140,7 @@ export async function proxy(request: NextRequest) {
   const hasRefreshToken = request.cookies.has("refreshToken");
 
   if (!accessToken && !hasRefreshToken) {
-    return NextResponse.redirect(
-      new URL("/auth/sign-in", request.url),
-    );
+    return NextResponse.redirect(new URL("/auth/sign-in", request.url));
   }
 
   if (!isTokenExpired(accessToken)) {
@@ -167,9 +159,7 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  return NextResponse.redirect(
-    new URL("/auth/sign-in", request.url),
-  );
+  return NextResponse.redirect(new URL("/auth/sign-in", request.url));
 }
 
 export const config = {
