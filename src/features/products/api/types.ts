@@ -24,7 +24,7 @@ export type ProductFilters = {
   categories?: string;
   search?: string;
   sortBy?: string;
-  sortOrder?: "asc" | "desc";
+  // sortOrder?: "asc" | "desc";
 };
 
 export type ProductsResponse = {

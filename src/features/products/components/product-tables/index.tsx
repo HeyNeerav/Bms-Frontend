@@ -21,9 +21,9 @@ export function ProductTable() {
     page: parseAsInteger.withDefault(1),
     limit: parseAsInteger.withDefault(10),
     sortBy: parseAsString,
-    sortOrder: parseAsStringLiteral(["asc", "desc"] as const).withDefault(
-      "asc",
-    ),
+    // sortOrder: parseAsStringLiteral(["asc", "desc"] as const).withDefault(
+    //   "asc",
+    // ),
   });
 
   const [nameFilters] = useQueryStates({
@@ -41,7 +41,7 @@ export function ProductTable() {
     limit: params.limit,
     ...(debouncedSearch && { search: debouncedSearch }),
     ...(params.sortBy && { sortBy: params.sortBy }),
-    ...(params.sortOrder && { sortOrder: params.sortOrder }),
+    // ...(params.sortOrder && { sortOrder: params.sortOrder }),
   };
 
   const business = useBusiness();

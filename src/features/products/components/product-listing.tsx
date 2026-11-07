@@ -13,14 +13,14 @@ export default function ProductListingPage({
   const search = searchParamsCache.get("name");
   const pageLimit = searchParamsCache.get("limit");
   const sortBy = searchParamsCache.get("sortBy");
-  const sortOrder = searchParamsCache.get("sortOrder");
+  // const sortOrder = searchParamsCache.get("sortOrder");
 
   const filters = {
     page,
     limit: pageLimit,
     ...(search && { search }),
     ...(sortBy && { sortBy }),
-    ...(sortOrder && { sortOrder }),
+    // ...(sortOrder && { sortOrder }),
   };
 
   const queryClient = getQueryClient();

@@ -60,23 +60,6 @@ export const columns: ColumnDef<DataTableFeatures, Invoice>[] = [
     size: 120,
   },
   {
-    accessorKey: "dueDate",
-    header: "Due Date",
-    cell: ({ cell }) => {
-      const dueDate = new Date(cell.getValue<Invoice["dueDate"]>() || "");
-      return <div>{dueDate.toLocaleDateString()}</div>;
-    },
-  },
-  {
-    accessorKey: "paidAt",
-    header: "Paid At",
-    cell: ({ cell }) => {
-      const paidAtValue = cell.getValue<Invoice["paidAt"]>();
-      const paidAt = paidAtValue ? new Date(paidAtValue) : null;
-      return <div>{paidAt ? paidAt.toLocaleDateString() : "Not Paid"}</div>;
-    },
-  },
-  {
     id: "status",
     accessorKey: "status",
     header: "Status",
@@ -99,6 +82,23 @@ export const columns: ColumnDef<DataTableFeatures, Invoice>[] = [
           {status}
         </Badge>
       );
+    },
+  },
+  {
+    accessorKey: "dueDate",
+    header: "Due Date",
+    cell: ({ cell }) => {
+      const dueDate = new Date(cell.getValue<Invoice["dueDate"]>() || "");
+      return <div>{dueDate.toLocaleDateString()}</div>;
+    },
+  },
+  {
+    accessorKey: "paidAt",
+    header: "Paid At",
+    cell: ({ cell }) => {
+      const paidAtValue = cell.getValue<Invoice["paidAt"]>();
+      const paidAt = paidAtValue ? new Date(paidAtValue) : null;
+      return <div>{paidAt ? paidAt.toLocaleDateString() : "Not Paid"}</div>;
     },
   },
 

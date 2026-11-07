@@ -15,7 +15,7 @@ export function InvoiceTable() {
     limit: parseAsInteger.withDefault(10),
     name: parseAsString,
     sortBy: parseAsString,
-    sortOrder: parseAsStringLiteral(["asc", "desc"] as const).withDefault("asc"),
+    sortOrder: parseAsStringLiteral(["asc", "desc"] as const).withDefault("desc"),
   });
 
   const filters = {
