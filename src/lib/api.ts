@@ -1,14 +1,6 @@
-const BASE_URL = process.env.BACKEND_API_URL;
+import { ApiError } from "./api-error";
 
-export class ApiError extends Error {
-  constructor(
-    public status: number,
-    message: string,
-  ) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
+const BASE_URL = process.env.BACKEND_API_URL;
 
 interface FetchOptions extends RequestInit {
   token?: string;
