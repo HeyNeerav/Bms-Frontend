@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const res = await api.post("/auth/verify", { email, verificationCode });
+    const res = await api.post("/auth/verify", { email, code: verificationCode });
 
     return NextResponse.json(res);
   } catch (error) {
