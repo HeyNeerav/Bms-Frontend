@@ -75,12 +75,12 @@ export function VerifyForm({
   useEffect(() => {
     const getPendingEmail = async () => {
       try {
-        const { data } = await apiClient.get<{ data: { email: string } }>(
+        const { email } = await apiClient.get<{ email: string }>(
           "/auth/verify/pending-email",
         );
 
-        if (data.email) {
-          form.setFieldValue("email", data.email);
+        if (email) {
+          form.setFieldValue("email", email);
         }
       } catch {
       } finally {
