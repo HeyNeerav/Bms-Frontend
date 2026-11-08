@@ -4,6 +4,7 @@ const BASE_URL = process.env.BACKEND_API_URL;
 
 const AUTH_ROUTES = new Set([
   "/auth/sign-up",
+  "/auth/sign-up/verify",
   "/auth/sign-in",
   "/auth/forgot-password",
 ]);
