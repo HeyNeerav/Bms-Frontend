@@ -29,7 +29,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json();
-    const respData = await api.post("/businesses", data, { token });
+    const cleanedData = Object.fromEntries(
+      Object.entries(data).filter(
+        ([_, value]) => value !== "" && value != null,
+      ),
+    );
+
+    const respData = await api.post("/businesses", cleanedData, { token });
     return NextResponse.json(
       { message: "Business created successfully", data: respData },
       { status: 201 },
@@ -37,12 +43,12 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     if (error instanceof ApiError) {
       if (error.status === 401) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
     }
 
     return NextResponse.json(
-      { error: "Failed to create business" },
+      { message: "Failed to create business" },
       { status: 500 },
     );
   }
