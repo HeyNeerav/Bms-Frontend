@@ -22,20 +22,19 @@ import { BriefcaseBusiness, Globe2, Mail, MapPin, Phone } from "lucide-react";
 import { useMemo } from "react";
 import { apiClient } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
+import { ApiError } from "@/lib/api-error";
 
 const businessFormSchema = z.object({
-  name: z.string().min(2, "Product name must be at least 2 characters"),
-  email: z.string("Please enter a valid email address").optional(),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-  website: z
-    .string()
-    .regex(
-      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/,
-      "Please enter a valid website address",
-    )
-    .optional(),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  name: z.string().min(2, "Business name must be at least 2 characters"),
+  email: z.email("Please enter a valid email").or(z.literal("")),
+  phone: z.string(),
+  address: z.string(),
+  website: z.string().refine(
+    (value) => !value || /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/.test(value),
+    "Please enter a valid website address",
+  ),
+
+  description: z.string().max(500, "Description must be at most 500 characters").optional(),
 });
 
 const stepSchemas = [
@@ -58,7 +57,7 @@ function ReviewSummary({
     phone?: string;
     website?: string;
     address?: string;
-    description: string;
+    description?: string;
   };
 }) {
   return (
@@ -108,14 +107,7 @@ function ReviewSummary({
 
 // --- Main Form ---
 
-type BusinessFormValues = {
-  name: string;
-  email?: string;
-  phone?: string;
-  website?: string;
-  address?: string;
-  description: string;
-};
+type BusinessFormValues = z.infer<typeof businessFormSchema>;
 
 export default function CreateBusinessForm() {
   const router = useRouter();
@@ -160,7 +152,7 @@ export default function CreateBusinessForm() {
         });
       } catch (error) {
         toast.error("Failed to create business. Please try again.", {
-          description: "An error occurred while creating the business.",
+          description: error instanceof ApiError ? error.message : "Unknown error",
           closeButton: true,
           position: "bottom-right",
           classNames: {
