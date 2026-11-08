@@ -79,7 +79,7 @@ export function VerifyForm({
     const getPendingEmail = async () => {
       try {
         const { data } = await apiClient.get<{ data: { email: string } }>(
-          "/auth/pending-verification",
+          "/auth/verify/pending-email",
         );
 
         if (data.email) {
