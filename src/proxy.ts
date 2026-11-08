@@ -132,7 +132,13 @@ function clearAuthCookies(response: NextResponse) {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  
+  const isApiAuthRoute = pathname.startsWith("/api/auth/");
 
+  if (isApiAuthRoute) {
+    return NextResponse.next();
+  }
+  
   if (AUTH_ROUTES.has(pathname)) {
     return NextResponse.next();
   }
@@ -165,6 +171,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|trpc|_next/static|_next/image|.*\\.(?:html?|css|js(?!on)|jpe?g|avif|png|gif|webp|svg|ico|ttf|woff2?|mp3|wav|csv|docx?|xlsx?|zip|webmanifest)$|favicon\\.ico|sitemap\\.xml|robots\\.txt).*)",
+    "/((?!trpc|_next/static|_next/image|.*\\.(?:html?|css|js(?!on)|jpe?g|avif|png|gif|webp|svg|ico|ttf|woff2?|mp3|wav|csv|docx?|xlsx?|zip|webmanifest)$|favicon\\.ico|sitemap\\.xml|robots\\.txt).*)",
   ],
 };
