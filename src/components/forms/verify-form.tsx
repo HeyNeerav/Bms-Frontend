@@ -25,10 +25,7 @@ import { ApiError } from "@/lib/api-error";
 
 export const verifySchema = z.object({
   email: z.email("Invalid email address"),
-  verificationCode: z
-    .number()
-    .min(100000, "Verification code must be 6 digits")
-    .max(999999, "Verification code must be 6 digits"),
+  verificationCode: z.string().length(6, "Verification code must be 6 characters"),
 });
 
 const RESEND_DELAY = 30;
