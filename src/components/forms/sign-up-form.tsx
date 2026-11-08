@@ -69,7 +69,7 @@ export function SignUpForm({
           } as React.CSSProperties,
         });
 
-        router.push("/auth/sign-in");
+        router.push("/auth/sign-up/verify");
       } catch (error) {
         toast.error("Failed to create account. Please try again.", {
           description:
